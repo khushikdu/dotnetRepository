@@ -17,7 +17,7 @@ namespace Assignment_1.Utils
         public DateTime? IssueDate { get; private set; }
 
 
-        public Book(int bookId, string title, string author,string genre)
+        public Book(int bookId, string title, string author, string genre)
         {
             this.BookId = bookId;
             this.Title = title;
@@ -35,11 +35,11 @@ namespace Assignment_1.Utils
         }
         public void DisplayBookInfo(Book book)
         {
-            Console.WriteLine($"Book ID: {book.BookId}");
-            Console.WriteLine($"Title: {book.Title}");
-            Console.WriteLine($"Author: {book.Author}");
-            Console.WriteLine($"Genre: {book.Genre}");
-            Console.WriteLine($"Availability: {(book.IsAvailable ? "Available" : "Not Available")}");
+            Console.WriteLine($"Book ID: {book.BookId}, " +
+                $"Title: {book.Title}, " +
+                $"Author: {book.Author}, " +
+                $"Genre: {book.Genre}, " +
+                $"Availability: {(book.IsAvailable ? "Available" : "Not Available")}");
         }
     }
 }

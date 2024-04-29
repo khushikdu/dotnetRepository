@@ -9,7 +9,7 @@ namespace Assignment_1.Utils
 {
     internal class Library
     {
-        public List<Book> books { get; set; } =new List<Book>();
+        public List<Book> books { get; set; } = new List<Book>();
         public List<Admin> admins { get; set; } = new List<Admin>();
         public List<User> users { get; set; } = new List<User>();
         public void AddBooks(Book book)
@@ -36,9 +36,9 @@ namespace Assignment_1.Utils
             }
             return true;
         }
-        public void IssueBook(Book book,User user,Admin admin)
+        public void IssueBook(Book book, User user, Admin admin)
         {
-            if(!IsEligibleToIssue(user))
+            if (!IsEligibleToIssue(user))
             {
                 return;
             }
@@ -51,23 +51,23 @@ namespace Assignment_1.Utils
 
             book.IsAvailable = false;
             book.Issuees.Add(user);
-            book.SetIssueDate(DateTime.Now); 
+            book.SetIssueDate(DateTime.Now);
             user.BorrowedBooks.Add(book);
             Console.WriteLine($"Book '{book.Title}' issued to {user.Name} successfully.");
             user.Issuer = admin.AdminName;
         }
-        public void ReturnBook(User user,Book book) 
+        public void ReturnBook(User user, Book book)
         {
             double fine = 0;
 
             if (!book.Issuees.Contains(user))
             {
                 Console.WriteLine("The book was not issued by this user.");
-                return ;
+                return;
             }
             book.IsAvailable = true;
             user.BorrowedBooks.Remove(book);
-            TimeSpan duration = DateTime.Now - book.IssueDate.Value; 
+            TimeSpan duration = DateTime.Now - book.IssueDate.Value;
             if (duration.Days > 7)
             {
                 fine += (duration.Days - 7) * 10;

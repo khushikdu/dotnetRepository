@@ -43,11 +43,11 @@ class Program
             Console.WriteLine("9. Exit");
             Console.Write("Enter your choice: ");
             string choice = Console.ReadLine();
+            Console.WriteLine();
 
             switch (choice)
             {
                 case "1":
-                    ValidateAdmin(library);
                     Console.Write("Enter user ID: ");
                     int userId = int.Parse(Console.ReadLine());
 
@@ -77,18 +77,11 @@ class Program
                         Console.WriteLine("Book not found.");
                         break;
                     }
-
+                    ValidateAdmin(library);
                     library.IssueBook(book, user, currentAdmin);
                     break;
                 case "2":
-                    Console.Write("Enter user ID: ");
-                    userId = int.Parse(Console.ReadLine());
-
-                    user = library.users.Find(u => u.UserId == userId);
-                    if (user == null)
-                    {
-                        Console.WriteLine("User not found. Please enter user details:");
-                    }
+                    user = findUser(library);
                     Console.Write("Enter book ID: ");
                     bookId = int.Parse(Console.ReadLine());
 
@@ -100,22 +93,69 @@ class Program
                     }
                     library.ReturnBook(user, book);
                     break;
-                case "3":            
-
+                case "3":
+                    user = findUser(library);
+                    if (user != null)
+                    {
+                        library.DisplayFine(user);
+                    }
                     break;
-                case "4":           
-
+                case "4":
+                    user = findUser(library);
+                    Console.WriteLine($"Books issued by {user.Name}");
+                    if (user != null)
+                    {
+                        foreach (Book books in user.BorrowedBooks)
+                        {
+                            Console.WriteLine($"{books.BookId}\t{books.Title}");
+                        }
+                    }
                     break;
-                case "5": DisplayBooks(library);
+                case "5":
+                    Console.WriteLine("Books in the library : ");
+                    foreach (Book books in library.books)
+                    {
+                        books.DisplayBookInfo(books);
+                    }
                     break;
-                case "6":         
+                case "6":
+                    Console.WriteLine("Books in the Library : ");
+                    ValidateAdmin(library);
+                    Console.WriteLine("Adding a new admin:");
+                    Console.Write("Enter admin ID: ");
+                    int adminId = int.Parse(Console.ReadLine());
 
+                    Console.Write("Enter admin name: ");
+                    string adminName = Console.ReadLine();
+
+                    Console.Write("Enter admin password: ");
+                    string adminPassword = Console.ReadLine();
+
+                    Admin newAdmin = new Admin(adminId, adminName, adminPassword);
+                    library.admins.Add(newAdmin);
+                    Console.WriteLine("New admin added successfully.");
                     break;
-                case "7":           
+                case "7":
+                    Console.WriteLine("Adding a new book to the library:");
+                    Console.Write("Enter book ID: ");
+                    int newBookId = int.Parse(Console.ReadLine());
 
+                    Console.Write("Enter book title: ");
+                    string newBookTitle = Console.ReadLine();
+
+                    Console.Write("Enter book author: ");
+                    string newBookAuthor = Console.ReadLine();
+
+                    Console.Write("Enter book genre: ");
+                    string newBookGenre = Console.ReadLine();
+
+                    Book newBook = new Book(newBookId, newBookTitle, newBookAuthor, newBookGenre);
+                    library.AddBooks(newBook);
+                    Console.WriteLine("New book added to the library successfully.");
                     break;
-                case "8":     
-
+                case "8":
+                    ValidateAdmin(library);
+                    ChangeAdmin(library);
                     break;
                 case "9":
                     exit = true;
@@ -126,13 +166,6 @@ class Program
             }
         }
     }
-    static void DisplayBooks(Library library)
-    {
-        foreach(Book book in library.books)
-        {
-            Console.WriteLine($"Book ID: {book.BookId}, Title: {book.Title}, Author: {book.Author}, Genre: {book.Genre}, Availability: {(book.IsAvailable ? "Available" : "Not Available")}");
-        }
-    }
     static void ValidateAdmin(Library library)
     {
         bool isLoggedIn = false;
@@ -140,7 +173,7 @@ class Program
 
         while (!isLoggedIn)
         {
-            Console.Write("Enter admin password: ");
+            Console.Write("Enter current admin password: ");
             string password = Console.ReadLine();
 
             foreach (Admin admin in library.admins)
@@ -158,5 +191,61 @@ class Program
                 Console.WriteLine("Invalid password. Try again.");
             }
         }
+    }
+    static void ChangeAdmin(Library library)
+    {
+        bool isLoggedIn = false;
+        Admin currentAdmin = null;
+        while (!isLoggedIn)
+        {
+
+            Console.Write("Enter \"exit\" to leave.\nEnter admin name: ");
+            string name = Console.ReadLine();
+
+            if (name.Equals("exit"))
+            {
+                break;
+            }
+
+            Console.Write("Enter admin password: ");
+            string password = Console.ReadLine();
+
+            foreach (Admin admin in library.admins)
+            {
+                if (admin.AdminName == name && admin.AdminPassword == password)
+                {
+                    isLoggedIn = true;
+                    currentAdmin = admin;
+                    break;
+                }
+            }
+
+            if (!isLoggedIn)
+            {
+                Console.WriteLine("Invalid admin name or password. Try again.");
+            }
+        }
+
+        if (currentAdmin != null)
+        {
+            Console.WriteLine("Admin logged in successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Failed to log in as admin.");
+        }
+    }
+
+    static User findUser(Library library)
+    {
+        Console.Write("Enter user ID: ");
+        int userId = int.Parse(Console.ReadLine());
+
+        User user = library.users.Find(u => u.UserId == userId);
+        if (user == null)
+        {
+            Console.WriteLine("User not found.");
+        }
+        return user;
     }
 }
