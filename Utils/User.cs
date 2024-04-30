@@ -14,7 +14,7 @@ namespace Assignment_1.Utils
         public UserType Type { get; }
         public List<Book> BorrowedBooks { get; } = new List<Book>();
         public double Fine { get; private set; }
-        public string Issuer { get; set; }
+        //public string Issuer { get; set; }
 
         public User(int userId, string name, UserType type)
         {

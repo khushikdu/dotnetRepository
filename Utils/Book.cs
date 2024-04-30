@@ -16,8 +16,8 @@ namespace Assignment_1.Utils
         public List<User> Issuees { get; } = new List<User>();
         public DateTime? IssueDate { get; private set; }
 
-
-        public Book(int bookId, string title, string author, string genre)
+        public string Issuer { get; set; }
+        public Book(int bookId, string title, string author,string genre)
         {
             this.BookId = bookId;
             this.Title = title;
@@ -35,11 +35,15 @@ namespace Assignment_1.Utils
         }
         public void DisplayBookInfo(Book book)
         {
-            Console.WriteLine($"Book ID: {book.BookId}, " +
-                $"Title: {book.Title}, " +
-                $"Author: {book.Author}, " +
-                $"Genre: {book.Genre}, " +
-                $"Availability: {(book.IsAvailable ? "Available" : "Not Available")}");
+            Console.WriteLine($"{book.BookId}\t{book.Title,-30}\t{book.Author,-20}\t{book.Genre,-15}\t{(book.IsAvailable ? "Available" : "Not Available")}");
+
+        }
+        public void DisplayIssuees()
+        {
+            foreach (User user in Issuees)
+            {
+                Console.WriteLine(user.Name);
+            }
         }
     }
 }

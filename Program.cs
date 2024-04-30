@@ -1,5 +1,6 @@
 ﻿using Assignment_1.Enums;
 using Assignment_1.Utils;
+using static System.Reflection.Metadata.BlobBuilder;
 
 class Program
 {
@@ -7,14 +8,14 @@ class Program
     {
         Library library = new Library();
 
-        Admin admin1 = new Admin(1, "khushi", "1234");
-        library.admins.Add(admin1);
+        Admin defaultAdmin = new Admin(1, "khushi", "1234");
+        library.admins.Add(defaultAdmin);
         Admin currentAdmin = library.admins[0];
 
         Book book1 = new Book(1, "The Great Gatsby", "F. Scott Fitzgerald", "Fiction");
         Book book2 = new Book(2, "To Kill a Mockingbird", "Harper Lee", "Fiction");
         Book book3 = new Book(3, "1984", "George Orwell", "Science Fiction");
-        Book book4 = new Book(4, "Harry Potter and the Prisnor of Azkaban", "J.K. Rowling", "Fantasy");
+        Book book4 = new Book(4, "Harry Potter and TPA", "J.K. Rowling", "Fantasy");
         Book book5 = new Book(5, "The Hobbit", "J.R.R. Tolkien", "Fantasy");
 
         library.AddBooks(book1);
@@ -31,16 +32,21 @@ class Program
         bool exit = false;
         while (!exit)
         {
-            Console.WriteLine("\nMenu:");
-            Console.WriteLine("1. Issue a book");
-            Console.WriteLine("2. Return a book");
-            Console.WriteLine("3. Display fine for a User");
-            Console.WriteLine("4. Display all books issued by a User");
-            Console.WriteLine("5. Display all books in the library");
-            Console.WriteLine("6. Add a new admin");
-            Console.WriteLine("7. Add a new book to the library");
-            Console.WriteLine("8. Change current admin");
-            Console.WriteLine("9. Exit");
+            Console.WriteLine("\nMenu:\n" +
+                  "1. Add a new User\n"+
+                  "2. Issue a book\n" +
+                  "3. Return a book\n" +
+                  "4. Details of a book\n" +
+                  "5. List of Issuees for a book\n" +
+                  "6. Display fine for a User\n" +
+                  "7. Display all books issued by a User\n" +
+                  "8. Display all books in the library\n" +
+                  "9. Add a new admin\n" +
+                  "10. Add a new book to the library\n" +
+                  "11. Remove a book from the library\n" +
+                  "12. Change current admin\n" +
+                  "13. Print Logs\n" +
+                  "14. Exit");
             Console.Write("Enter your choice: ");
             string choice = Console.ReadLine();
             Console.WriteLine();
@@ -50,95 +56,93 @@ class Program
                 case "1":
                     Console.Write("Enter user ID: ");
                     int userId = int.Parse(Console.ReadLine());
-
                     User user = library.users.Find(u => u.UserId == userId);
+                    if(user==null)
+                    {
+                        Console.WriteLine($"User with id {userId} already exists.");
+                    }
+                    else if (user == null)
+                    {
+                        AddUser(library, userId);
+                    }
+                    break;
+                case "2":
+                    Console.Write("Enter user ID: ");
+                    userId = int.Parse(Console.ReadLine());
+
+                    user = library.users.Find(u => u.UserId == userId);
                     if (user == null)
                     {
                         Console.WriteLine("User not found. Please enter user details:");
-
-                        Console.Write("Enter user name: ");
-                        string userName = Console.ReadLine();
-
-                        Console.WriteLine("Enter user type (Student/Teacher): ");
-                        string userTypeStr = Console.ReadLine();
-                        UserType userType;
-                        Enum.TryParse(userTypeStr, true, out userType);
-
-                        user = new User(userId, userName, userType);
-                        library.users.Add(user);
+                        AddUser(library,userId);
                     }
-
-                    Console.Write("Enter book ID: ");
-                    int bookId = int.Parse(Console.ReadLine());
-
-                    Book book = library.books.Find(b => b.BookId == bookId);
-                    if (book == null)
+                    Book book = FindBook(library);
+                    if (book != null)
                     {
-                        Console.WriteLine("Book not found.");
-                        break;
+                        ValidateAdmin(library);
+                        library.IssueBook(book, user, currentAdmin);
                     }
-                    ValidateAdmin(library);
-                    library.IssueBook(book, user, currentAdmin);
-                    break;
-                case "2":
-                    user = findUser(library);
-                    Console.Write("Enter book ID: ");
-                    bookId = int.Parse(Console.ReadLine());
-
-                    book = library.books.Find(b => b.BookId == bookId);
-                    if (book == null)
-                    {
-                        Console.WriteLine("Book not found.");
-                        break;
-                    }
-                    library.ReturnBook(user, book);
                     break;
                 case "3":
+                    user = findUser(library);
+                    book = FindBook(library);
+                    if (book != null)
+                        library.ReturnBook(user, book);
+                    break;
+                case "4":
+                    book = FindBook(library);
+                    if (book != null)
+                    {
+                        Console.WriteLine($"Book ID\tTitle\t\t\t\tAuthor\t\t\tGenre\t\tAvailability");
+                        book.DisplayBookInfo(book);
+                    }
+                    break;
+                case "5":
+                    book = FindBook(library);
+                    if (book != null)
+                        book.DisplayIssuees();
+                    break;
+                case "6":
                     user = findUser(library);
                     if (user != null)
                     {
                         library.DisplayFine(user);
                     }
                     break;
-                case "4":
+                case "7":
                     user = findUser(library);
                     Console.WriteLine($"Books issued by {user.Name}");
                     if (user != null)
                     {
+                        if (user.BorrowedBooks.Count == 0)
+                        {
+                            Console.WriteLine($"No active Issues by {user.Name}");
+                            break;
+                        }
                         foreach (Book books in user.BorrowedBooks)
                         {
-                            Console.WriteLine($"{books.BookId}\t{books.Title}");
+                            Console.WriteLine($"{books.BookId}\t{books.Title}\tIssued by: {books.Issuer}");
                         }
                     }
                     break;
-                case "5":
+                case "8":
+                    ValidateAdmin(library);
                     Console.WriteLine("Books in the library : ");
+                    Console.WriteLine($"Book ID\tTitle\t\t\t\tAuthor\t\t\tGenre\t\tAvailability");
                     foreach (Book books in library.books)
                     {
                         books.DisplayBookInfo(books);
                     }
                     break;
-                case "6":
-                    Console.WriteLine("Books in the Library : ");
+                case "9":
                     ValidateAdmin(library);
-                    Console.WriteLine("Adding a new admin:");
-                    Console.Write("Enter admin ID: ");
-                    int adminId = int.Parse(Console.ReadLine());
-
-                    Console.Write("Enter admin name: ");
-                    string adminName = Console.ReadLine();
-
-                    Console.Write("Enter admin password: ");
-                    string adminPassword = Console.ReadLine();
-
-                    Admin newAdmin = new Admin(adminId, adminName, adminPassword);
-                    library.admins.Add(newAdmin);
-                    Console.WriteLine("New admin added successfully.");
+                    library.AddAdmin(library);
                     break;
-                case "7":
+
+                case "10":
+                    ValidateAdmin(library);
                     Console.WriteLine("Adding a new book to the library:");
-                    Console.Write("Enter book ID: ");
-                    int newBookId = int.Parse(Console.ReadLine());
+                    int newBookId = library.books.Count + 1;
 
                     Console.Write("Enter book title: ");
                     string newBookTitle = Console.ReadLine();
@@ -153,11 +157,31 @@ class Program
                     library.AddBooks(newBook);
                     Console.WriteLine("New book added to the library successfully.");
                     break;
-                case "8":
+                case "11":
                     ValidateAdmin(library);
-                    ChangeAdmin(library);
+                    Console.Write("Enter book ID to remove: ");
+                    int removeBookId = int.Parse(Console.ReadLine());
+
+                    Book removeBook = library.books.Find(b => b.BookId == removeBookId);
+                    if (removeBook != null)
+                    {
+                        library.RemoveBooks(removeBook);
+                        Console.WriteLine($"Book '{removeBook.Title}' removed successfully from the library.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Book not found.");
+                    }
+                    break; 
+                case "12":
+                    ValidateAdmin(library);
+                    currentAdmin=library.ChangeAdmin(library);
                     break;
-                case "9":
+                case "13":
+                    library.logManager.PrintLogs();
+                    //exit = true;
+                    break;
+                case "14":
                     exit = true;
                     break;
                 default:
@@ -192,50 +216,6 @@ class Program
             }
         }
     }
-    static void ChangeAdmin(Library library)
-    {
-        bool isLoggedIn = false;
-        Admin currentAdmin = null;
-        while (!isLoggedIn)
-        {
-
-            Console.Write("Enter \"exit\" to leave.\nEnter admin name: ");
-            string name = Console.ReadLine();
-
-            if (name.Equals("exit"))
-            {
-                break;
-            }
-
-            Console.Write("Enter admin password: ");
-            string password = Console.ReadLine();
-
-            foreach (Admin admin in library.admins)
-            {
-                if (admin.AdminName == name && admin.AdminPassword == password)
-                {
-                    isLoggedIn = true;
-                    currentAdmin = admin;
-                    break;
-                }
-            }
-
-            if (!isLoggedIn)
-            {
-                Console.WriteLine("Invalid admin name or password. Try again.");
-            }
-        }
-
-        if (currentAdmin != null)
-        {
-            Console.WriteLine("Admin logged in successfully.");
-        }
-        else
-        {
-            Console.WriteLine("Failed to log in as admin.");
-        }
-    }
-
     static User findUser(Library library)
     {
         Console.Write("Enter user ID: ");
@@ -247,5 +227,30 @@ class Program
             Console.WriteLine("User not found.");
         }
         return user;
+    }
+    static Book FindBook(Library library)
+    {
+        Console.Write("Enter book ID: ");
+        int bookId = int.Parse(Console.ReadLine());
+
+        Book book = library.books.Find(b => b.BookId == bookId);
+        if (book == null)
+        {
+            Console.WriteLine("Book not found.");
+        }
+        return book;
+    }
+    static void AddUser(Library library,int userId)
+    {
+        Console.Write("Enter user name: ");
+        string userName = Console.ReadLine();
+
+        Console.WriteLine("Enter user type (Student/Teacher): ");
+        string userTypeStr = Console.ReadLine();
+        UserType userType;
+        Enum.TryParse(userTypeStr, true, out userType);
+
+        User user = new User(userId, userName, userType);
+        library.users.Add(user);
     }
 }
