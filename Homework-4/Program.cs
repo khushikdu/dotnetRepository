@@ -4,6 +4,10 @@ namespace Homework_4
 {
     internal class Program
     {
+        /// <summary>
+        /// Main method to execute the Collection Management Application.
+        /// </summary>
+        /// <param name="args">Command-line arguments.</param>
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the Collection Management Application!");

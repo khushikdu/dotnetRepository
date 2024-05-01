@@ -8,6 +8,10 @@ namespace Homework_4.Operations
 {
     internal class ListOperations
     {
+        /// <summary>
+        /// Prints the menu for list operations.
+        /// </summary>
+        /// <param name="collection">The name of the collection.</param>
         private List<int> listItems = new List<int>();
         public void PrintMenu(String collection)
         {
@@ -44,7 +48,8 @@ namespace Homework_4.Operations
                         DeleteElement(0, "First");
                         break;
                     case 4:
-                        DeleteElement(listItems.Count / 2, "Middle");
+                        int middleIndex = (listItems.Count % 2 == 0) ? listItems.Count / 2 - 1 : listItems.Count / 2;
+                        DeleteElement(middleIndex, "Middle");
                         break;
                     case 5:
                         DeleteElement(listItems.Count-1, "Last");
@@ -64,6 +69,9 @@ namespace Homework_4.Operations
                 }
             }
         }
+        /// <summary>
+        /// Executes list operations.
+        /// </summary>
         public void AddElement()
         {
             Console.Write("Enter the number to be added : ");
@@ -77,14 +85,27 @@ namespace Homework_4.Operations
                 Console.WriteLine("Invalid Input");
             }
         }
+        /// <summary>
+        /// Adds an element to the list.
+        /// </summary>
         public void PrintElements()
         {
             Console.WriteLine("List Items");
-            foreach (int items in listItems)
+            if (listItems.Count == 0)
             {
-                Console.WriteLine(items);
+                Console.WriteLine("The list is empty.");
+            }
+            else
+            {
+                foreach (int item in listItems)
+                {
+                    Console.WriteLine(item);
+                }
             }
         }
+        /// <summary>
+        /// Prints all the elements in the list.
+        /// </summary>
         public void DeleteElement(int index, string position)
         {
             if (listItems.Count > 0)
@@ -97,6 +118,11 @@ namespace Homework_4.Operations
                 Console.WriteLine("List is empty");
             }
         }
+        /// <summary>
+        /// Deletes an element from the list.
+        /// </summary>
+        /// <param name="index">The index of the element to delete.</param>
+        /// <param name="position">The position of the element to delete.</param>
         public void CalculateAverage()
         {
             if (listItems.Count > 0)

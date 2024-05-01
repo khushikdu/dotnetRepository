@@ -9,15 +9,11 @@ namespace Homework_4.Operations
 {
     internal class DictionaryOpeartions
     {
-        private Dictionary<int, double> dictionaryItems = new Dictionary<int, double>(){
-            { 1, 1 },
-            { 2,2 },
-            { 3, 3 },
-            { 4, 4 },
-            { 5, 5 }
-        };
-
+        private Dictionary<int, double> dictionaryItems = new Dictionary<int, double>();
         
+        /// <summary>
+        /// Executes dictionary operations.
+        /// </summary>
         public void Operations() {
             ListOperations listOperations = new ListOperations();
             while (true)
@@ -62,6 +58,9 @@ namespace Homework_4.Operations
                 }
             }
         }
+        /// <summary>
+        /// Adds an element to the dictionary.
+        /// </summary>
         public void AddElement()
         {
             Console.Write("Enter the key : ");
@@ -83,15 +82,30 @@ namespace Homework_4.Operations
                 Console.WriteLine("Invalid key. Please enter a valid integer key.");
             }
         }
-
+        /// <summary>
+        /// Prints all elements in the dictionary.
+        /// </summary>
         public void PrintElements()
         {
             Console.WriteLine("Dictionary Items");
-            foreach(var item in dictionaryItems)
+            if (dictionaryItems.Count == 0)
             {
-                Console.WriteLine($"Key: {item.Key}, Value: {item.Value}");
+                Console.WriteLine("The dictionary is empty.");
+            }
+            else
+            {
+                foreach (var item in dictionaryItems)
+                {
+                    Console.WriteLine($"Key: {item.Key}, Value: {item.Value}");
+                }
             }
         }
+
+        /// <summary>
+        /// Deletes an element from the dictionary.
+        /// </summary>
+        /// <param name="index">The index of the element to delete.</param>
+        /// <param name="position">The position of the element to delete.</param>
         public void DeleteElement(int index, string position)
         {
             if (dictionaryItems.Count > 0)
@@ -112,6 +126,9 @@ namespace Homework_4.Operations
                 Console.WriteLine("Dictionary is empty");
             }
         }
+        /// <summary>
+        /// Calculates the average of all values in the dictionary.
+        /// </summary>
         public void CalculateAverage()
         {
             if (dictionaryItems.Count > 0)
