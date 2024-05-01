@@ -2,20 +2,34 @@
 
 namespace Homework1
 {
+    /// <summary>
+    /// Represents a bank account with a balance.
+    /// </summary>
     class BankAccount
     {
         private int _balance;
 
+        /// <summary>
+        /// Initializes a new instance of the BankAccount class with a zero balance.
+        /// </summary>
         public BankAccount()
         {
             _balance = 0;
         }
 
+        /// <summary>
+        /// Deposits the specified amount into the account.
+        /// </summary>
+        /// <param name="amount">The amount to deposit.</param>
         public void Deposit(int amount)
         {
             _balance += amount;
         }
 
+        /// <summary>
+        /// Withdraws the specified amount from the account if sufficient balance is available.
+        /// </summary>
+        /// <param name="amount">The amount to withdraw.</param>
         public void Withdraw(int amount)
         {
             if (amount <= _balance)
@@ -28,14 +42,24 @@ namespace Homework1
             }
         }
 
+        /// <summary>
+        /// Displays the current balance of the account.
+        /// </summary>
         public void Display()
         {
             Console.WriteLine($"\nBalance : Rs. {_balance}");
         }
     }
 
+    /// <summary>
+    /// Main class to demonstrate the BankAccount class.
+    /// </summary>
     class Program
     {
+        /// <summary>
+        /// Entry point of the program.
+        /// </summary>
+        /// <param name="args">Command-line arguments.</param>
         public static void Main(string[] args)
         {
             BankAccount bankAccount = new BankAccount();
