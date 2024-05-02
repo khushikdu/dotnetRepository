@@ -7,12 +7,20 @@ using System.Threading.Tasks;
 
 namespace Assignment_1.Utils
 {
+    /// <summary>
+    /// Represents a library management system.
+    /// </summary>
     internal class Library
     {
         public LogManager logManager = new LogManager();
         public List<Book> books { get; set; } =new List<Book>();
         public List<Admin> admins { get; set; } = new List<Admin>();
         public List<User> users { get; set; } = new List<User>();
+
+        /// <summary>
+        /// Adds a book to the library.
+        /// </summary>
+        /// <param name="book">The book to add.</param>
         public void AddBooks(Book book)
         {
             books.Add(book);
@@ -25,6 +33,10 @@ namespace Assignment_1.Utils
             logManager.AddLogEntry(logEntry);
         }
 
+        /// <summary>
+        /// Removes a book from the library.
+        /// </summary>
+        /// <param name="book">The book to remove.</param>
         public void RemoveBooks(Book book)
         {
             books.Remove(book);
@@ -36,6 +48,12 @@ namespace Assignment_1.Utils
             };
             logManager.AddLogEntry(logEntry);
         }
+
+        /// <summary>
+        /// Checks if a user is eligible to issue a book based on their type and the number of books they have borrowed.
+        /// </summary>
+        /// <param name="user">The user to check eligibility for.</param>
+        /// <returns>True if the user is eligible; otherwise, false.</returns>
         private bool IsEligibleToIssue(User user)
         {
             if (user.Type == UserType.Student && user.BorrowedBooks.Count >= 3)
@@ -51,6 +69,13 @@ namespace Assignment_1.Utils
             }
             return true;
         }
+
+        /// <summary>
+        /// Issues a book to a user.
+        /// </summary>
+        /// <param name="book">The book to issue.</param>
+        /// <param name="user">The user to whom the book is issued.</param>
+        /// <param name="admin">The admin issuing the book.</param>
         public void IssueBook(Book book,User user,Admin admin)
         {
             if(!IsEligibleToIssue(user))
@@ -80,6 +105,12 @@ namespace Assignment_1.Utils
             };
             logManager.AddLogEntry(logEntry);
         }
+
+        /// <summary>
+        /// Returns a book borrowed by a user.
+        /// </summary>
+        /// <param name="user">The user returning the book.</param>
+        /// <param name="book">The book being returned.</param>
         public void ReturnBook(User user,Book book) 
         {
             double fine = 0;
@@ -110,6 +141,11 @@ namespace Assignment_1.Utils
             logManager.AddLogEntry(logEntry);
         }
 
+        /// <summary>
+        /// Calculates the total fine imposed on a user for overdue books.
+        /// </summary>
+        /// <param name="user">The user for whom to calculate the fine.</param>
+        /// <returns>The total fine amount.</returns>
         public double CalculateFine(User user)
         {
             double fine = 0;
@@ -124,10 +160,20 @@ namespace Assignment_1.Utils
             user.AddFine(fine);
             return fine;
         }
+
+        /// <summary>
+        /// Displays the total fine imposed on a user.
+        /// </summary>
+        /// <param name="user">The user for whom to display the fine.</param>
         public void DisplayFine(User user)
         {
             Console.WriteLine($"Total fine imposed on {user.Name}: {user.Fine}");
         }
+
+        /// <summary>
+        /// Lists the books borrowed by a user.
+        /// </summary>
+        /// <param name="user">The user whose borrowed books are to be listed.</param>
         public void ListBooksBorrowedByUser(User user)
         {
             Console.WriteLine($"Books borrowed by {user.Name}:");
@@ -136,6 +182,11 @@ namespace Assignment_1.Utils
                 Console.WriteLine($"{book.Title} by {book.Author}");
             }
         }
+
+        /// <summary>
+        /// Adds a new admin to the library.
+        /// </summary>
+        /// <param name="library">The library to which the admin is added.</param>
         public void AddAdmin(Library library)
         {
             Console.WriteLine("Adding a new admin:");
@@ -162,6 +213,12 @@ namespace Assignment_1.Utils
                 logManager.AddLogEntry(logEntry);
             }
         }
+
+        /// <summary>
+        /// Changes the current admin for the library.
+        /// </summary>
+        /// <param name="library">The library for which to change the admin.</param>
+        /// <returns>The new admin if successfully changed; otherwise, null.</returns>
         public Admin ChangeAdmin(Library library)
         {
             bool isLoggedIn = false;

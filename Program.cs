@@ -2,8 +2,15 @@
 using Assignment_1.Utils;
 using static System.Reflection.Metadata.BlobBuilder;
 
+/// <summary>
+/// Represents the main program for managing a library system.
+/// </summary>
 class Program
 {
+    /// <summary>
+    /// The entry point of the application.
+    /// </summary>
+    /// <param name="args">The command-line arguments.</param>
     static void Main(string[] args)
     {
         Library library = new Library();
@@ -57,7 +64,7 @@ class Program
                     Console.Write("Enter user ID: ");
                     int userId = int.Parse(Console.ReadLine());
                     User user = library.users.Find(u => u.UserId == userId);
-                    if(user==null)
+                    if(user!=null)
                     {
                         Console.WriteLine($"User with id {userId} already exists.");
                     }
@@ -179,7 +186,6 @@ class Program
                     break;
                 case "13":
                     library.logManager.PrintLogs();
-                    //exit = true;
                     break;
                 case "14":
                     exit = true;
@@ -190,6 +196,11 @@ class Program
             }
         }
     }
+
+    /// <summary>
+    /// Validates the current admin's password.
+    /// </summary>
+    /// <param name="library">The library instance.</param>
     static void ValidateAdmin(Library library)
     {
         bool isLoggedIn = false;
@@ -216,6 +227,12 @@ class Program
             }
         }
     }
+
+    /// <summary>
+    /// Finds a user by their ID.
+    /// </summary>
+    /// <param name="library">The library instance.</param>
+    /// <returns>The found user or null if not found.</returns>
     static User findUser(Library library)
     {
         Console.Write("Enter user ID: ");
@@ -228,6 +245,12 @@ class Program
         }
         return user;
     }
+
+    /// <summary>
+    /// Finds a book by its ID.
+    /// </summary>
+    /// <param name="library">The library instance.</param>
+    /// <returns>The found book or null if not found.</returns>
     static Book FindBook(Library library)
     {
         Console.Write("Enter book ID: ");
@@ -240,15 +263,37 @@ class Program
         }
         return book;
     }
-    static void AddUser(Library library,int userId)
-    {
-        Console.Write("Enter user name: ");
-        string userName = Console.ReadLine();
 
-        Console.WriteLine("Enter user type (Student/Teacher): ");
-        string userTypeStr = Console.ReadLine();
+    /// <summary>
+    /// Adds a new user to the library.
+    /// </summary>
+    /// <param name="library">The library instance.</param>
+    /// <param name="userId">The ID of the user to add.</param>
+    static void AddUser(Library library, int userId)
+    {
+        string userName;
+        do
+        {
+            Console.Write("Enter user name: ");
+            userName = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                Console.WriteLine("Name cannot be empty. Please enter a valid name.");
+            }
+        } while (string.IsNullOrWhiteSpace(userName));
+
         UserType userType;
-        Enum.TryParse(userTypeStr, true, out userType);
+        do
+        {
+            Console.WriteLine("Enter user type (Student/Teacher): ");
+            string userTypeStr = Console.ReadLine();
+
+            if (!Enum.TryParse(userTypeStr, true, out userType))
+            {
+                Console.WriteLine("Invalid user type. Please enter either 'Student' or 'Teacher'.");
+            }
+        } while (!Enum.IsDefined(typeof(UserType), userType));
 
         User user = new User(userId, userName, userType);
         library.users.Add(user);
