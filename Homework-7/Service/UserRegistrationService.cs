@@ -12,7 +12,7 @@ namespace Homework_7.Service
     public class UserRegistrationService : IUserRegistrationRepository
     {
         private readonly ILogger<UserRegistrationService> _logger;
-        public List<User> UserList { get; set; }
+        public List<User> UserList;
 
         /// <summary>
         /// Constructor for UserRegistrationService.
@@ -32,6 +32,21 @@ namespace Homework_7.Service
         {            
             UserList.Add(user);
             _logger.LogInformation("User registered successfully: {Username}", user.Username);
+        }
+
+        /// <summary>
+        /// Retrieves all registered users.
+        /// </summary>
+        /// <returns>A list of UserDTO objects representing the registered users.</returns>
+        public List<UserDTO> GetAllUsers()
+        {
+            var userMapper = new UserMapper();
+            List<UserDTO> userDTOs = new List<UserDTO>();
+            foreach (var user in UserList)
+            {
+                userDTOs.Add(userMapper.Map(user)); 
+            }
+            return userDTOs;
         }
     }
 }

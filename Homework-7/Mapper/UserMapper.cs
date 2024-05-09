@@ -31,5 +31,23 @@ namespace Homework_7.Mapper
             };
             return user;
         }
+        public UserDTO Map(User userDto)
+        {
+            var user = new UserDTO
+            {
+                Username = userDto.Username,
+                Email = userDto.Email,
+                Password = userDto.Password,
+                ConfirmPassword = userDto.ConfirmPassword,
+                Age = userDto.Age,
+                PhoneNumber = userDto.PhoneNumber,
+                Country = userDto.Country,
+                Gender = userDto.Gender,
+                CreditCard = userDto.CreditCard,
+                ExpirationDate = userDto.ExpirationDate,
+                CVV = userDto.CVV
+            };
+            return user;
+        }
     }
 }

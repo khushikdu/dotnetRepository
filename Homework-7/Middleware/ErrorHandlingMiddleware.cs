@@ -33,9 +33,7 @@ namespace Homework_7.Middleware
         {
             try
             {
-                _logger.LogInformation("Middleware: Before.");
                 await _next(context);
-                _logger.LogInformation("Middleware: After.");
             }
             catch (Exception ex)
             {

@@ -33,18 +33,19 @@ namespace Homework_7.DTO
         [Phone(ErrorMessage = "Invalid phone number format.")]
         public string PhoneNumber { get; set; }
 
+
         [ValidCountry(ErrorMessage = "Invalid country. Valid countries are: USA, Canada, UK, Australia.")]
-        public string Country { get; set; }
+        public string? Country { get; set; }
 
         [ValidGender(ErrorMessage = "Invalid gender. Valid genders are: Male, Female, Other.")]
-        public string Gender { get; set; }
+        public string? Gender { get; set; }
 
         [CreditCardValidator(ErrorMessage = "Invalid Credit Card Number")]
-        public string CreditCard { get; set; }
+        public string? CreditCard { get; set; }
 
         [ExpirationDateValidator(ErrorMessage = "Invalid expiration date. Expiration date must be a future date in the format MM/YYYY.")]
-        public string ExpirationDate { get; set; }
+        public string? ExpirationDate { get; set; }
         [CVVValidator(ErrorMessage = "Invalid CVV. CVV must be a 3 or 4-digit number.")]
-        public string CVV { get; set; }
+        public string? CVV { get; set; }
     }
 }

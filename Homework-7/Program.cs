@@ -15,7 +15,7 @@ namespace Homework_7
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-            builder.Services.AddScoped<IUserRegistrationRepository, UserRegistrationService>();
+            builder.Services.AddSingleton<IUserRegistrationRepository, UserRegistrationService>();
             builder.Services.AddTransient<ErrorHandlingIMiddleware>();
 
             builder.Services.AddEndpointsApiExplorer();

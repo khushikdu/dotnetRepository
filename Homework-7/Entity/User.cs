@@ -41,26 +41,26 @@ namespace Homework_7.Entity
         /// <summary>
         /// Gets or sets the country of the user.
         /// </summary>
-        public string Country { get; set; }
+        public string? Country { get; set; }
 
         /// <summary>
         /// Gets or sets the gender of the user.
         /// </summary>
-        public string Gender { get; set; }
+        public string? Gender { get; set; }
 
         /// <summary>
         /// Gets or sets the credit card number of the user.
         /// </summary>
-        public string CreditCard { get; set; }
+        public string? CreditCard { get; set; }
 
         /// <summary>
         /// Gets or sets the expiration date of the user's credit card.
         /// </summary>
-        public string ExpirationDate { get; set; }
+        public string? ExpirationDate { get; set; }
 
         /// <summary>
         /// Gets or sets the CVV (Card Verification Value) of the user's credit card.
         /// </summary>
-        public string CVV { get; set; }
+        public string? CVV { get; set; }
     }
 }

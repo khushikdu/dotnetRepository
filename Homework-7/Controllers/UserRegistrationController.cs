@@ -39,5 +39,17 @@ namespace Homework_7.Controllers
             _logger.LogInformation("User registered successfully: {Username}", user.Username);
             return Ok("User registered successfully");
         }
+
+        /// <summary>
+        /// Retrieves all registered users.
+        /// </summary>
+        /// <returns>A list of UserDTO objects representing the registered users.</returns>
+        [HttpGet("users")]
+        public IActionResult GetAllUsers()
+        {
+            List<UserDTO> users = _userRegistrationService.GetAllUsers();
+            return Ok(users);
+        }
+
     }
 }

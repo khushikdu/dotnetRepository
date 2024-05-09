@@ -13,5 +13,12 @@ namespace Homework_7.Repository
         /// </summary>
         /// <param name="user">User object containing registration details.</param>
         void Save(User user);
+
+        /// <summary>
+        /// Retrieves all registered users.
+        /// </summary>
+        /// <returns>A list of UserDTO objects representing the registered users.</returns>
+        List<UserDTO> GetAllUsers();
+
     }
 }
