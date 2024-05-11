@@ -35,6 +35,7 @@ namespace Assignment_2
             builder.Services.AddControllers();
             builder.Services.AddSingleton<UserRepository>();
             builder.Services.AddSingleton<UserService>();
+            
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -49,7 +50,9 @@ namespace Assignment_2
             }
 
             app.UseHttpsRedirection();
+            
             app.UseAuthentication();
+            
             app.UseAuthorization();
 
 

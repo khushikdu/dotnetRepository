@@ -6,22 +6,32 @@ using System.Security.Claims;
 
 namespace Assignment_2.Controllers
 {
+    /// <summary>
+    /// Controller for retrieving user details.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
 
+        /// <summary>
+        /// Constructor for UserController.
+        /// </summary>
+        /// <param name="userService">An instance of UserService for user-related operations.</param>
         public UserController(UserService userService)
         {
             _userService = userService;
         }
 
-        [Authorize(Roles ="Admin")]
+        /// <summary>
+        /// Endpoint for retrieving user details.
+        /// </summary>
+        /// <returns>Returns user details for the authenticated user.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet("get-user")]
         public IActionResult GetAuthenticated()
         {
-            // Get the claims associated with the authenticated user
             var claimsIdentity = User.Identity as ClaimsIdentity;
             var usernameClaim = claimsIdentity.FindFirst(ClaimTypes.Name);
 
@@ -29,12 +39,10 @@ namespace Assignment_2.Controllers
             {
                 var username = usernameClaim.Value;
 
-                // Retrieve user details from the repository based on the username
                 var user = _userService.GetUserByUsername(username);
 
                 if (user != null)
                 {
-                    // Return user details
                     return Ok(user);
                 }
                 else
@@ -44,10 +52,8 @@ namespace Assignment_2.Controllers
             }
             else
             {
-                // Handle the case where the username claim is not found
                 return BadRequest("Username claim not found.");
             }
         }
-        
     }
 }

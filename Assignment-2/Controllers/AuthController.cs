@@ -11,6 +11,9 @@ using System.Text;
 
 namespace Assignment_2.Controllers
 {
+    /// <summary>
+    /// Controller for user authentication and registration.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -18,18 +21,28 @@ namespace Assignment_2.Controllers
         private IConfiguration _config;
         private readonly UserService _userService;
 
+        /// <summary>
+        /// Constructor for AuthController.
+        /// </summary>
+        /// <param name="config">An instance of IConfiguration for retrieving configuration settings.</param>
+        /// <param name="userService">An instance of UserService for user-related operations.</param>
         public AuthController(IConfiguration config, UserService userService)
         {
             _userService = userService;
             _config = config;
         }
 
+        /// <summary>
+        /// Endpoint for user authentication.
+        /// </summary>
+        /// <param name="loginRequest">The login credentials provided by the user.</param>
+        /// <returns>Returns a JWT token upon successful authentication.</returns>
         [HttpPost]
         public IActionResult Post([FromBody] LoginUser loginRequest)
         {
             try
             {
-
+                // Authenticate user
                 var user = _userService.GetUserByUsername(loginRequest.Username);
 
                 if (user == null)
@@ -41,33 +54,39 @@ namespace Assignment_2.Controllers
                 {
                     throw new InvalidCredentialsException("Incorrect password");
                 }
+
+                // Generate JWT token
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
                 var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
                 var claims = new[]
                 {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
 
-                var Sectoken = new JwtSecurityToken(
-                  _config["Jwt:Issuer"],
-                  _config["Jwt:Issuer"],
-                  claims,
-                  expires: DateTime.Now.AddMinutes(120),
-                  signingCredentials: credentials);
+                var token = new JwtSecurityToken(
+                    _config["Jwt:Issuer"],
+                    _config["Jwt:Issuer"],
+                    claims,
+                    expires: DateTime.Now.AddMinutes(120),
+                    signingCredentials: credentials);
 
-                var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
+                var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-                return Ok(token);
+                return Ok(jwtToken);
             }
-            catch(GlobalException ex) 
+            catch (GlobalException ex)
             {
                 return Unauthorized(ex.Message);
             }
-
         }
 
+        /// <summary>
+        /// Endpoint for user registration.
+        /// </summary>
+        /// <param name="userDto">The user information provided for registration.</param>
+        /// <returns>Returns HTTP status codes indicating the result of the registration attempt.</returns>
         [HttpPost("register")]
         public IActionResult Register([FromBody] UserDTO userDto)
         {
@@ -88,7 +107,6 @@ namespace Assignment_2.Controllers
                 {
                     return Conflict(result);
                 }
-
             }
             catch (GlobalException ex)
             {
