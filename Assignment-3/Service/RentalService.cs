@@ -8,7 +8,7 @@ namespace Assignment_3.Services
     /// <summary>
     /// Service class for managing rental-related operations.
     /// </summary>
-    public class RentalService
+    public class RentalService : IRentalService
     {
         private readonly IRentalRepository _rentalRepository;
 

@@ -11,13 +11,13 @@ namespace Assignment_3.Controllers
     [Route("api/[controller]")]
     public class RentalsController : ControllerBase
     {
-        private readonly RentalService _rentalService;
+        private readonly IRentalService _rentalService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RentalsController"/> class.
         /// </summary>
         /// <param name="rentalService">The service used to manage rentals.</param>
-        public RentalsController(RentalService rentalService)
+        public RentalsController(IRentalService rentalService)
         {
             _rentalService = rentalService;
         }

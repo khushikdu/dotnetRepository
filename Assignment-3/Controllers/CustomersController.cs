@@ -11,13 +11,13 @@ namespace Assignment_3.Controllers
     [Route("api/[controller]")]
     public class CustomersController : ControllerBase
     {
-        private readonly CustomerService _customerService;
+        private readonly ICustomerService _customerService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomersController"/> class.
         /// </summary>
         /// <param name="customerService">The service used to manage customers.</param>
-        public CustomersController(CustomerService customerService)
+        public CustomersController(ICustomerService customerService)
         {
             _customerService = customerService;
         }

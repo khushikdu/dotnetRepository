@@ -8,7 +8,7 @@ namespace Assignment_3.Service
     /// <summary>
     /// Service class for managing movie-related operations.
     /// </summary>
-    public class MovieService
+    public class MovieService : IMovieService
     {
         private readonly IMovieRepository _movieRepository;
 

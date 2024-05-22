@@ -15,14 +15,14 @@ namespace Assignment_3.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly MySQLDBContext _dbContext;
-        private readonly MovieService _movieService;
+        private readonly IMovieService _movieService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MoviesController"/> class.
         /// </summary>
         /// <param name="movieService">The service used to manage movies.</param>
         /// <param name="context">The database context.</param>
-        public MoviesController(MovieService movieService, MySQLDBContext context)
+        public MoviesController(IMovieService movieService, MySQLDBContext context)
         {
             _dbContext = context;
             _movieService = movieService;

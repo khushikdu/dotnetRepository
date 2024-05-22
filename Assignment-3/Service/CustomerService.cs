@@ -6,7 +6,7 @@ namespace Assignment_3.Services
     /// <summary>
     /// Service class for managing customer-related operations.
     /// </summary>
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
 

@@ -24,13 +24,13 @@ namespace Assignment_3
             builder.Services.AddControllers();
 
             builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-            builder.Services.AddScoped<MovieService>();
+            builder.Services.AddScoped<IMovieService, MovieService>();
 
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-            builder.Services.AddScoped<CustomerService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
 
             builder.Services.AddScoped<IRentalRepository, RentalRepository>();
-            builder.Services.AddScoped<RentalService>();
+            builder.Services.AddScoped<IRentalService,RentalService>();
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
