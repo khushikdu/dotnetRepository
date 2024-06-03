@@ -1,9 +1,9 @@
 using Homework_7.Entity;
-using Homework_7.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Homework_7.DTO;
 using Homework_7.Mapper;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
+using Homework_7.Service.Interface;
+using Homework_7.ViewModel;
 
 namespace Homework_7.Controllers
 {
@@ -11,15 +11,10 @@ namespace Homework_7.Controllers
     [Route("api/register")]
     public class RegistrationController : ControllerBase
     {
-        private readonly IUserRegistrationRepository _userRegistrationService;
+        private readonly IUserRegistrationService _userRegistrationService;
         private readonly ILogger<RegistrationController> _logger;
 
-        /// <summary>
-        /// Constructor for RegistrationController.
-        /// </summary>
-        /// <param name="userRegistrationService">User registration service.</param>
-        /// <param name="logger">Logger instance for logging.</param>
-        public RegistrationController(IUserRegistrationRepository userRegistrationService, ILogger<RegistrationController> logger)
+        public RegistrationController(IUserRegistrationService userRegistrationService, ILogger<RegistrationController> logger)
         {
             _userRegistrationService = userRegistrationService;
             _logger = logger;
@@ -31,12 +26,9 @@ namespace Homework_7.Controllers
         /// <param name="userDto">DTO object containing user registration details.</param>
         /// <returns>HTTP status code indicating success or failure of the registration process.</returns>
         [HttpPost]
-        public IActionResult Register([FromBody] UserDTO userDto)
+        public IActionResult Register([FromBody] UserVM user)
         {
-            UserMapper userMapper = new UserMapper();
-            User user = userMapper.Map(userDto);
             _userRegistrationService.Save(user);
-            _logger.LogInformation("User registered successfully: {Username}", user.Username);
             return Ok("User registered successfully");
         }
 
@@ -47,7 +39,7 @@ namespace Homework_7.Controllers
         [HttpGet("users")]
         public IActionResult GetAllUsers()
         {
-            List<UserDTO> users = _userRegistrationService.GetAllUsers();
+            List<UserVM> users = _userRegistrationService.GetAllUsers();
             return Ok(users);
         }
 

@@ -1,12 +1,12 @@
 ﻿using Homework_7.Validators;
 using System.ComponentModel.DataAnnotations;
 
-namespace Homework_7.DTO
+namespace Homework_7.ViewModel
 {
     /// <summary>
-    /// Data Transfer Object (DTO) for user registration.
+    /// View Model (VM) for user registration.
     /// </summary>
-    public class UserDTO
+    public class UserVM
     {
 
         [Required(ErrorMessage = "Username is a required field")]

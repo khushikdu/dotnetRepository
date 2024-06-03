@@ -1,5 +1,5 @@
-﻿using Homework_7.DTO;
-using Homework_7.Entity;
+﻿using Homework_7.Entity;
+using Homework_7.ViewModel;
 
 namespace Homework_7.Mapper
 {
@@ -13,9 +13,9 @@ namespace Homework_7.Mapper
         /// </summary>
         /// <param name="userDto">UserDTO object to be mapped.</param>
         /// <returns>User entity mapped from the UserDTO object.</returns>
-        public User Map(UserDTO userDto)
+        public User Map(UserVM userDto)
         {
-            var user = new User
+            User user = new User
             {
                 Username = userDto.Username,
                 Email = userDto.Email,
@@ -31,9 +31,9 @@ namespace Homework_7.Mapper
             };
             return user;
         }
-        public UserDTO Map(User userDto)
+        public UserVM Map(User userDto)
         {
-            var user = new UserDTO
+            UserVM user = new UserVM
             {
                 Username = userDto.Username,
                 Email = userDto.Email,

@@ -1,5 +1,5 @@
 using Homework_7.Middleware;
-using Homework_7.Repository;
+using Homework_7.Service.Interface;
 using Homework_7.Service;
 
 namespace Homework_7
@@ -14,8 +14,10 @@ namespace Homework_7
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            
+            //using AddSingleton as the userlist is present in the service layer
+            builder.Services.AddSingleton<IUserRegistrationService, UserRegistrationService>();
 
-            builder.Services.AddSingleton<IUserRegistrationRepository, UserRegistrationService>();
             builder.Services.AddTransient<ErrorHandlingIMiddleware>();
 
             builder.Services.AddEndpointsApiExplorer();
@@ -36,6 +38,8 @@ namespace Homework_7
             app.UseAuthorization();
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
+
+            //used two error handling middlewares to show the implementation using the IMiddleware interface.
             app.UseMiddleware<ErrorHandlingIMiddleware>();
 
 
