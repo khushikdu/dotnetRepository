@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+//Didn't change the nomenclature to ViewModel as the test cases were failing due to the previous namespace
 namespace Assignment_2.DTO
 {
     /// <summary>
@@ -7,15 +8,11 @@ namespace Assignment_2.DTO
     /// </summary>
     public class LoginUser
     {
-        /// <summary>
-        /// Gets or sets the username for login.
-        /// </summary>
+        
         [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; }
 
-        /// <summary>
-        /// Gets or sets the password for login.
-        /// </summary>
+        
         [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; }
     }

@@ -1,5 +1,5 @@
 ﻿using Assignment_2.Repository;
-using Assignment_2.Services;
+using Assignment_2.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -7,27 +7,27 @@ using System.Security.Claims;
 namespace Assignment_2.Controllers
 {
     /// <summary>
-    /// Controller for retrieving user details.
+    /// Controller for user-related operations.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
         /// <summary>
         /// Constructor for UserController.
         /// </summary>
-        /// <param name="userService">An instance of UserService for user-related operations.</param>
-        public UserController(UserService userService)
+        /// <param name="userService">User service instance.</param>
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
 
         /// <summary>
-        /// Endpoint for retrieving user details.
+        /// Retrieves details of the authenticated user.
         /// </summary>
-        /// <returns>Returns user details for the authenticated user.</returns>
+        /// <returns>Details of the authenticated user.</returns>
         [Authorize(Roles = "Admin")]
         [HttpGet("get-user")]
         public IActionResult GetAuthenticated()
@@ -35,25 +35,16 @@ namespace Assignment_2.Controllers
             var claimsIdentity = User.Identity as ClaimsIdentity;
             var usernameClaim = claimsIdentity.FindFirst(ClaimTypes.Name);
 
-            if (usernameClaim != null)
-            {
-                var username = usernameClaim.Value;
+            var username = usernameClaim.Value;
 
-                var user = _userService.GetUserByUsername(username);
+            var user = _userService.GetUserByUsername(username);
 
-                if (user != null)
-                {
-                    return Ok(user);
-                }
-                else
-                {
-                    return NotFound("User not found");
-                }
-            }
-            else
+            if (user != null)
             {
-                return BadRequest("Username claim not found.");
+                return Ok(user);
             }
+
+            return NotFound("User not found");
         }
     }
 }

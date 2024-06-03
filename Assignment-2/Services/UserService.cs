@@ -1,21 +1,23 @@
 ﻿using Assignment_2.CustomExceptions;
 using Assignment_2.DTO;
-using Assignment_2.Repository;
+using Assignment_2.Mapper;
+using Assignment_2.Repository.Interface;
+using Assignment_2.Services.Interface;
 
 namespace Assignment_2.Services
 {
     /// <summary>
     /// Service class for user-related operations.
     /// </summary>
-    public class UserService
+    public class UserService : IUserService
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
         /// <summary>
         /// Initializes a new instance of the UserService class with the specified UserRepository dependency.
         /// </summary>
         /// <param name="userRepository">The UserRepository instance to use for user data access.</param>
-        public UserService(UserRepository userRepository)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }
@@ -27,31 +29,19 @@ namespace Assignment_2.Services
         /// <returns>A string indicating the result of the registration process.</returns>
         public string RegisterUser(UserDTO userDto)
         {
-            // Check if email is already in use
-            if (_userRepository.GetUserByEmail(userDto.Email) != null)
-            {
-                throw new UniqueEmailException("Email already in use");
-            }
-
-            // Check if username is already in use
             if (_userRepository.GetUserByUsername(userDto.Username) != null)
             {
                 throw new UniqueUsernameException("Username already in use");
             }
 
-            // Create UserModel instance from UserDTO
-            var user = new UserModel
+            if (_userRepository.GetUserByEmail(userDto.Email) != null)
             {
-                Username = userDto.Username,
-                Email = userDto.Email,
-                Password = userDto.Password,
-                Name = userDto.Name,
-                Address = userDto.Address,
-                PhoneNumber = userDto.PhoneNumber,
-                Role = userDto.Role
-            };
+                throw new UniqueEmailException("Email already in use");
+            }
 
-            // Add user to repository
+
+            UserModel user = MapUserDTOToModel.Map(userDto);
+
             _userRepository.AddUser(user);
 
             return "User registered successfully";
@@ -64,7 +54,6 @@ namespace Assignment_2.Services
         /// <returns>The user with the specified username, or null if not found.</returns>
         public UserModel GetUserByUsername(string username)
         {
-            // Retrieve user from repository based on username
             return _userRepository.GetUserByUsername(username);
         }
     }

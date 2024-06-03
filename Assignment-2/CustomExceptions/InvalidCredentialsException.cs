@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents an exception that is thrown when invalid credentials are provided.
     /// </summary>
-    public class InvalidCredentialsException : GlobalException
+    public class InvalidCredentialsException : Exception
     {
         /// <summary>
         /// Initializes a new instance of the InvalidCredentialsException class with a specified error message.

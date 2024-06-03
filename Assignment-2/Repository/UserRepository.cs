@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assignment_2.Repository.Interface;
 
 namespace Assignment_2.Repository
 {
     /// <summary>
     /// Repository class for managing user data.
     /// </summary>
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private List<UserModel> _users = new List<UserModel>();
 

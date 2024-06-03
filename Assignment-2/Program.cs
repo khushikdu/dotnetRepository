@@ -1,8 +1,5 @@
-using Assignment_2.Repository;
-using Assignment_2.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Assignment_2.ExtensionMethods;
+using Assignment_2.Middlewares;
 
 namespace Assignment_2
 {
@@ -12,30 +9,12 @@ namespace Assignment_2
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
-            var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
-
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-             .AddJwtBearer(options =>
-             {
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateIssuer = true,
-                     ValidateAudience = true,
-                     ValidateLifetime = true,
-                     ValidateIssuerSigningKey = true,
-                     ValidIssuer = jwtIssuer,
-                     ValidAudience = jwtIssuer,
-                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
-                 };
-             });
-
             // Add services to the container.
-
             builder.Services.AddControllers();
-            builder.Services.AddSingleton<UserRepository>();
-            builder.Services.AddSingleton<UserService>();
-            
+
+            builder.Services.AddServices();
+            builder.Services.AddJwtAuthentication(builder.Configuration);
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -50,11 +29,12 @@ namespace Assignment_2
             }
 
             app.UseHttpsRedirection();
-            
-            app.UseAuthentication();
-            
-            app.UseAuthorization();
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.MapControllers();
 
