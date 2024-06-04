@@ -9,11 +9,6 @@ namespace Assignment_3.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomerService"/> class.
-        /// </summary>
-        /// <param name="customerRepository">The customer repository.</param>
         public CustomerService(ICustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;

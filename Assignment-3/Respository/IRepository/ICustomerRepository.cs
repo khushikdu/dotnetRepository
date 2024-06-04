@@ -7,11 +7,6 @@ namespace Assignment_3.Respository.IRepository
     /// </summary>
     public interface ICustomerRepository
     {
-        /// <summary>
-        /// Adds a new customer.
-        /// </summary>
-        /// <param name="customerDto">The data transfer object containing the customer information.</param>
-        /// <returns>The ID of the newly added customer.</returns>
         int AddCustomer(AddCustomerDTO customerDto);
     }
 }

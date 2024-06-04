@@ -11,11 +11,6 @@ namespace Assignment_3.Service
     public class MovieService : IMovieService
     {
         private readonly IMovieRepository _movieRepository;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MovieService"/> class.
-        /// </summary>
-        /// <param name="movieRepository">The movie repository.</param>
         public MovieService(IMovieRepository movieRepository)
         {
             _movieRepository = movieRepository;

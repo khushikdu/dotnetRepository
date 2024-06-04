@@ -10,7 +10,6 @@ namespace Assignment_3.Services
     /// </summary>
     public interface IRentalService
     {
-
         void RentMovieById(RentMovieByID_DTO rentDto);
         void RentMovieByTitle(RentMovieByName_DTO rentDto);
         IEnumerable<CustomerResponseDTO> GetCustomersByMovieId(int movieId);

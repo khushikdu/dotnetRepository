@@ -5,6 +5,8 @@ using Assignment_3.Service;
 using Microsoft.EntityFrameworkCore;
 using Assignment_3.Repositories;
 using Assignment_3.Services;
+using Assignment_3.ExtensionMethods;
+using Assignment_3.Middleware;
 
 namespace Assignment_3
 {
@@ -22,15 +24,7 @@ namespace Assignment_3
             // Add services to the container.
 
             builder.Services.AddControllers();
-
-            builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-            builder.Services.AddScoped<IMovieService, MovieService>();
-
-            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-            builder.Services.AddScoped<ICustomerService, CustomerService>();
-
-            builder.Services.AddScoped<IRentalRepository, RentalRepository>();
-            builder.Services.AddScoped<IRentalService,RentalService>();
+            builder.Services.AddServices();
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -45,6 +39,9 @@ namespace Assignment_3
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 
             app.UseAuthorization();
 

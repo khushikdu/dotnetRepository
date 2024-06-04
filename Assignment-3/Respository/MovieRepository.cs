@@ -15,11 +15,6 @@ namespace Assignment_3.Respository
     public class MovieRepository : IMovieRepository
     {
         private readonly MySQLDBContext _context;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MovieRepository"/> class.
-        /// </summary>
-        /// <param name="context">The database context.</param>
         public MovieRepository(MySQLDBContext context)
         {
             _context = context;
@@ -33,26 +28,22 @@ namespace Assignment_3.Respository
         /// <exception cref="InvalidOperationException">Thrown when a movie with the same title already exists.</exception>
         public int AddMovie(AddMovieDTO movieDto)
         {
-            // Check if a movie with the same title already exists.
-            var existingMovie = _context.Movies.FirstOrDefault(m => m.Title == movieDto.Title);
+            Movie? existingMovie = _context.Movies.FirstOrDefault(m => m.Title == movieDto.Title);
 
             if (existingMovie != null)
             {
                 throw new InvalidOperationException("Movie with the same title already exists.");
             }
 
-            // Create a new movie entity.
-            var newMovie = new Movie
+            Movie newMovie = new Movie
             {
                 Title = movieDto.Title,
                 Price = movieDto.Price
             };
 
-            // Add the new movie to the database context and save changes.
             _context.Movies.Add(newMovie);
             _context.SaveChanges();
 
-            // Return the ID of the newly added movie.
             return newMovie.Id;
         }
 
@@ -79,7 +70,7 @@ namespace Assignment_3.Respository
         /// <returns>The movie with the specified ID, or null if not found.</returns>
         public MovieResponseDTO GetMovieById(int id)
         {
-            var movie = _context.Movies.Find(id);
+            Movie? movie = _context.Movies.Find(id);
             if (movie == null)
             {
                 return null;
@@ -100,7 +91,7 @@ namespace Assignment_3.Respository
         /// <returns>The movie with the specified title, or null if not found.</returns>
         public MovieResponseDTO GetMovieByTitle(string title)
         {
-            var movie = _context.Movies.FirstOrDefault(m => m.Title == title);
+            Movie? movie = _context.Movies.FirstOrDefault(m => m.Title == title);
             if (movie == null)
             {
                 return null;

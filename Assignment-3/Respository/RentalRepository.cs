@@ -17,33 +17,21 @@ namespace Assignment_3.Repositories
         private readonly MySQLDBContext _dbContext;
         private readonly IMovieRepository _movieRepository;
         private readonly ICustomerRepository _customerRepository;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RentalRepository"/> class.
-        /// </summary>
-        /// <param name="context">The database context.</param>
-        /// <param name="movieRepository">The movie repository.</param>
-        /// <param name="customerRepository">The customer repository.</param>
         public RentalRepository(MySQLDBContext context, IMovieRepository movieRepository, ICustomerRepository customerRepository)
         {
             _dbContext = context;
             _movieRepository = movieRepository;
             _customerRepository = customerRepository;
         }
-
-        /// <summary>
-        /// Rents a movie by its ID.
-        /// </summary>
-        /// <param name="rentDto">The data transfer object containing the rental information.</param>
-        /// <exception cref="InvalidOperationException">Thrown when the movie or customer ID is invalid or the movie is already rented.</exception>
+        
         public void RentMovieById(RentMovieByID_DTO rentDto)
         {
             try
             {
-                var movie = _dbContext.Movies
+                Movie? movie = _dbContext.Movies
                                     .Include(m => m.Rentals)
                                     .SingleOrDefault(m => m.Id == rentDto.MovieId);
-                var customer = _dbContext.Customers.Find(rentDto.CustomerId);
+                Customer? customer = _dbContext.Customers.Find(rentDto.CustomerId);
 
                 if (movie == null || customer == null)
                 {
@@ -51,7 +39,7 @@ namespace Assignment_3.Repositories
                 }
 
                 // Check for existing rental
-                var existingRental = _dbContext.Rentals
+                Rental? existingRental = _dbContext.Rentals
                                               .Where(r => r.MovieId == movie.Id && r.CustomerId == customer.Id)
                                               .OrderByDescending(r => r.RentalDate)
                                               .FirstOrDefault();
@@ -61,7 +49,7 @@ namespace Assignment_3.Repositories
                     throw new InvalidOperationException("Movie is already rented.");
                 }
 
-                var rental = new Rental
+                Rental rental = new Rental
                 {
                     MovieId = movie.Id,
                     CustomerId = customer.Id,
@@ -93,16 +81,15 @@ namespace Assignment_3.Repositories
         {
             try
             {
-                var movie = _dbContext.Movies.FirstOrDefault(m => m.Title == rentDto.Title);
-                var customer = _dbContext.Customers.FirstOrDefault(c => c.Username == rentDto.Username);
+                Movie? movie = _dbContext.Movies.FirstOrDefault(m => m.Title == rentDto.Title);
+                Customer? customer = _dbContext.Customers.FirstOrDefault(c => c.Username == rentDto.Username);
 
                 if (movie == null || customer == null)
                 {
                     throw new InvalidOperationException("Invalid movie title or customer username.");
                 }
 
-                // Check for existing rental
-                var existingRental = _dbContext.Rentals
+                Rental? existingRental = _dbContext.Rentals
                                               .Where(r => r.MovieId == movie.Id && r.CustomerId == customer.Id)
                                               .OrderByDescending(r => r.RentalDate)
                                               .FirstOrDefault();
@@ -112,7 +99,7 @@ namespace Assignment_3.Repositories
                     throw new InvalidOperationException("Movie is already rented.");
                 }
 
-                var rental = new Rental
+                Rental rental = new Rental
                 {
                     MovieId = movie.Id,
                     CustomerId = customer.Id,
@@ -182,7 +169,7 @@ namespace Assignment_3.Repositories
         /// <returns>The total cost of movies rented by the customer.</returns>
         public int GetTotalCostByCustomerId(int customerId)
         {
-            var rentals = _dbContext.Rentals
+            List<Rental> rentals = _dbContext.Rentals
                 .Include(r => r.Movie)
                 .Where(r => r.CustomerId == customerId)
                 .ToList();
@@ -191,7 +178,7 @@ namespace Assignment_3.Repositories
 
             int totalCost = 0;
 
-            foreach (var rental in rentals)
+            foreach (Rental rental in rentals)
             {
                 Console.WriteLine($"Rental Price: {rental.Movie?.Price}");
                 if (rental.Movie != null)

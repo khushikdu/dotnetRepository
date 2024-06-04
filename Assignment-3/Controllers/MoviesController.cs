@@ -32,19 +32,12 @@ namespace Assignment_3.Controllers
         /// Adds a new movie.
         /// </summary>
         /// <param name="movieDto">The data transfer object containing the movie information.</param>
-        /// <returns>The ID of the newly added movie if successful, or a conflict status if an error occurs.</returns>
+        /// <returns>The ID of the newly added movie if successful.</returns>
         [HttpPost]
         public ActionResult<int> AddMovie(AddMovieDTO movieDto)
         {
-            try
-            {
-                int movieId = _movieService.AddMovie(movieDto);
-                return Ok(movieId);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }
+            int movieId = _movieService.AddMovie(movieDto);
+            return Ok(movieId);
         }
 
         /// <summary>
@@ -66,7 +59,7 @@ namespace Assignment_3.Controllers
         [HttpGet("{id}")]
         public ActionResult<MovieResponseDTO> GetMovieById(int id)
         {
-            var movie = _movieService.GetMovieById(id);
+            MovieResponseDTO? movie = _movieService.GetMovieById(id);
             if (movie == null)
             {
                 return NotFound("Movie not found.");
@@ -82,7 +75,7 @@ namespace Assignment_3.Controllers
         [HttpGet("title/{title}")]
         public ActionResult<MovieResponseDTO> GetMovieByTitle(string title)
         {
-            var movie = _movieService.GetMovieByTitle(title);
+            MovieResponseDTO? movie = _movieService.GetMovieByTitle(title);
             if (movie == null)
             {
                 return NotFound("Movie not found.");

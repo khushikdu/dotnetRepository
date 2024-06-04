@@ -11,11 +11,6 @@ namespace Assignment_3.Services
     public class RentalService : IRentalService
     {
         private readonly IRentalRepository _rentalRepository;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RentalService"/> class.
-        /// </summary>
-        /// <param name="rentalRepository">The rental repository.</param>
         public RentalService(IRentalRepository rentalRepository)
         {
             _rentalRepository = rentalRepository;

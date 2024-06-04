@@ -26,19 +26,12 @@ namespace Assignment_3.Controllers
         /// Adds a new customer.
         /// </summary>
         /// <param name="customerDto">The data transfer object containing the customer information.</param>
-        /// <returns>The ID of the newly added customer if successful, or a conflict status if an error occurs.</returns>
+        /// <returns>The ID of the newly added customer if successful.</returns>
         [HttpPost]
         public ActionResult<int> AddCustomer(AddCustomerDTO customerDto)
         {
-            try
-            {
-                int customerId = _customerService.AddCustomer(customerDto);
-                return Ok(customerId);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }
+            int customerId = _customerService.AddCustomer(customerDto);
+            return Ok(customerId);
         }
     }
 }

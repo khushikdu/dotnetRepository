@@ -26,38 +26,24 @@ namespace Assignment_3.Controllers
         /// Rents a movie by its ID.
         /// </summary>
         /// <param name="rentDto">The data transfer object containing the rental information.</param>
-        /// <returns>A success message if the movie is rented successfully, or a conflict status if an error occurs.</returns>
+        /// <returns>A success message if the movie is rented successfully.</returns>
         [HttpPost("byId")]
         public IActionResult RentMovieById(RentMovieByID_DTO rentDto)
         {
-            try
-            {
-                _rentalService.RentMovieById(rentDto);
-                return Ok("Movie rented successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }
+            _rentalService.RentMovieById(rentDto);
+            return Ok("Movie rented successfully.");
         }
 
         /// <summary>
         /// Rents a movie by its title.
         /// </summary>
         /// <param name="rentDto">The data transfer object containing the rental information.</param>
-        /// <returns>A success message if the movie is rented successfully, or a conflict status if an error occurs.</returns>
+        /// <returns>A success message if the movie is rented successfully.</returns>
         [HttpPost("byName")]
         public IActionResult RentMovieByTitle(RentMovieByName_DTO rentDto)
         {
-            try
-            {
-                _rentalService.RentMovieByTitle(rentDto);
-                return Ok("Movie rented successfully.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }
+            _rentalService.RentMovieByTitle(rentDto);
+            return Ok("Movie rented successfully.");
         }
 
         /// <summary>

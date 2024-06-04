@@ -10,7 +10,6 @@ namespace Assignment_3.Service
     /// </summary>
     public interface IMovieService
     {
-
         int AddMovie(AddMovieDTO movieDto);
         IEnumerable<MovieResponseDTO> GetAllMovies();
         MovieResponseDTO GetMovieById(int id);
