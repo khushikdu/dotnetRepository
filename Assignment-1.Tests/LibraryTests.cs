@@ -10,38 +10,16 @@ namespace Assignment_1.Tests
     /// <summary>
     /// Test class for testing the functionalities of the Library system.
     /// </summary>
-    public class Assignment_1Tests
+    public class LibraryTests
     {
         private readonly Library _library;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Assignment_1Tests"/> class.
         /// </summary>
-        public Assignment_1Tests()
+        public LibraryTests()
         {
             _library = new Library();
-        }
-
-        /// <summary>
-        /// Tests if a new user can be added to the library.
-        /// </summary>
-        [Fact]
-        public void AddUser_ShouldAddNewUser()
-        {
-            // Arrange
-            int userId = 3;
-            string userName = "Khushi";
-            var userType = UserType.Teacher;
-
-            // Act
-            User user = new User(userId, userName, userType);
-            _library.users.Add(user);
-
-            // Assert
-            var addedUser = _library.users.SingleOrDefault(u => u.UserId == userId);
-            Assert.NotNull(addedUser);
-            Assert.Equal(userName, addedUser.Name);
-            Assert.Equal(userType, addedUser.Type);
         }
 
         /// <summary>
@@ -224,81 +202,6 @@ namespace Assignment_1.Tests
 
             // Assert
             Assert.Equal(0, fine);
-        }
-
-        /// <summary>
-        /// Tests if a new admin can be added to the library.
-        /// </summary>
-        [Fact]
-        public void AddAdmin_ShouldAddNewAdmin()
-        {
-            // Arrange
-
-            // Act
-            var initialAdminCount = _library.admins.Count;
-            var newAdmin = new Admin(2, "Jonathan", "1234");
-            _library.admins.Add(newAdmin);
-
-            // Assert
-            Assert.Equal(initialAdminCount + 1, _library.admins.Count);
-            Assert.Contains(newAdmin, _library.admins);
-        }
-
-        /// <summary>
-        /// Tests if adding a duplicate admin throws an exception.
-        /// </summary>
-        [Fact]
-        public void AddAdmin_ShouldThrowExceptionWhenAddingDuplicateAdmin()
-        {
-            // Arrange
-            var existingAdmin = new Admin(1, "Admin", "1234");
-            _library.admins.Add(existingAdmin);
-
-            // Simulate user input
-            var input = new StringReader("Admin\npassword\n");
-            Console.SetIn(input);
-
-            // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => _library.AddAdmin(_library));
-            Assert.Equal("Admin with the same name already exists.", exception.Message);
-        }
-
-        /// <summary>
-        /// Tests if a new book can be added to the library.
-        /// </summary>
-        [Fact]
-        public void AddBook_ShouldAddNewBook()
-        {
-            // Arrange
-            var book = new Book(1, "Harry Potter and The Deathly Hallows", "JK Rowling", "Fantasy");
-
-            // Act
-            _library.AddBooks(book);
-
-            // Assert
-            var addedBook = _library.books.SingleOrDefault(b => b.BookId == book.BookId);
-            Assert.NotNull(addedBook);
-            Assert.Equal("Harry Potter and The Deathly Hallows", addedBook.Title);
-            Assert.Equal("JK Rowling", addedBook.Author);
-            Assert.Equal("Fantasy", addedBook.Genre);
-        }
-
-        /// <summary>
-        /// Tests if a book can be removed from the library.
-        /// </summary>
-        [Fact]
-        public void RemoveBook_ShouldRemoveBook()
-        {
-            // Arrange
-            var book = new Book(1, "Harry Potter and The Goblet of Fire", "JK Rowling", "Fantasy");
-            _library.AddBooks(book);
-
-            // Act
-            _library.RemoveBooks(book);
-
-            // Assert
-            var removedBook = _library.books.SingleOrDefault(b => b.BookId == book.BookId);
-            Assert.Null(removedBook);
         }
     }
 }

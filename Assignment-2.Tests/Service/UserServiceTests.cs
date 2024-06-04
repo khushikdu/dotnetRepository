@@ -1,11 +1,11 @@
 using Assignment_2.CustomExceptions;
 using Assignment_2.DTO;
-using Assignment_2.Repository;
+using Assignment_2.Repository.Interface;
 using Assignment_2.Services;
 using Moq;
 using Xunit;
 
-namespace Assignment_2.Tests
+namespace Assignment_2.Tests.Service
 {
     /// <summary>
     /// Test class for UserService.

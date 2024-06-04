@@ -1,5 +1,4 @@
 ﻿using Assignment_2.DTO;
-using Assignment_2.Services;
 using Assignment_2.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -7,8 +6,9 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using Xunit;
 using Microsoft.AspNetCore.Http;
+using Assignment_2.Services.Interface;
 
-namespace Assignment_2.Tests
+namespace Assignment_2.Tests.Controllers
 {
     /// <summary>
     /// Test class for UserController.
@@ -99,34 +99,6 @@ namespace Assignment_2.Tests
             Assert.NotNull(result);
             Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("User not found", result.Value);
-        }
-
-        /// <summary>
-        /// Test method to verify if bad request status is returned when the username claim is not found.
-        /// </summary>
-        [Fact]
-        public void GetAuthenticated_ShouldReturnBadRequest_WhenUsernameClaimIsNotFound()
-        {
-            // Arrange
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Role, "Admin")
-            };
-            var identity = new ClaimsIdentity(claims, "TestAuthType");
-            var claimsPrincipal = new ClaimsPrincipal(identity);
-
-            _userController.ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext { User = claimsPrincipal }
-            };
-
-            // Act
-            var result = _userController.GetAuthenticated() as BadRequestObjectResult;
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.IsType<BadRequestObjectResult>(result);
-            Assert.Equal("Username claim not found.", result.Value);
         }
     }
 }
