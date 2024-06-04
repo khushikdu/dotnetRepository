@@ -8,5 +8,6 @@ namespace Assessment_1.Interfaces.IService
         int AddDriver(AddDriverVM driverVM);
         List<Driver> GetAllAvailableDrivers();
         List<Driver> GetDriversByVehicleType(string vehicleType);
+        void StartRide(int rideID, int driverId,int otp);
     }
 }

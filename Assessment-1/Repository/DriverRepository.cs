@@ -39,7 +39,7 @@ namespace Assessment_1.Repository
             return driver.DriverId;
         }
 
-        public Driver GetRiderByRiderEmail(string email)
+        public Driver GetDriverByRiderEmail(string email)
         {
             return _context.Drivers.SingleOrDefault(r => r.Email == email);
         }
@@ -52,6 +52,29 @@ namespace Assessment_1.Repository
         {
             return _context.Drivers.Where(d => d.VehicleType == vehicleType).ToList();
         }
+        public void StartRide(int rideID, int driverId, int otp)
+        {
+
+            try
+            {
+                var driver = _context.Drivers.SingleOrDefault(d => d.DriverId == driverId);
+                if (driver != null) 
+                {
+                    driver.Status= Availability.Unavailable.ToString();
+                    _context.SaveChanges();
+                }
+
+                var ride = _context.Rides.SingleOrDefault(d => d.RiderId == rideID);
+                if (driver != null)
+                {
+                    ride.Status = RideStatus.Ongoing.ToString();
+                    _context.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
     }
 }
 

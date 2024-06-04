@@ -20,8 +20,17 @@ namespace Assessment_1.Controllers
         {
             int driverId = _driverService.AddDriver(driverVM);
             return Ok(driverId);
-            
       
         }
+        [HttpPost("startRide")]
+        public ActionResult<int> StartRide(int driverId, int otp)
+        {
+            //passing 1 as ride id and driverid
+            _driverService.StartRide(1,1,otp);
+            
+            return Ok("Ride Started");
+
+        }
+
     }
 }

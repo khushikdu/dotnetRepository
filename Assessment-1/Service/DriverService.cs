@@ -1,4 +1,5 @@
 ﻿using Assessment_1.Entity;
+using Assessment_1.Enums;
 using Assessment_1.Interfaces.IRepository;
 using Assessment_1.Interfaces.IService;
 using Assessment_1.ViewModel.RequestVM;
@@ -27,6 +28,10 @@ namespace Assessment_1.Service
         public List<Driver> GetDriversByVehicleType(string vehicleType)
         {
             return _driverRepository.GetDriversByVehicleType(vehicleType);
+        }
+        public void StartRide(int driverId, int otp)
+        {
+            return _driverRepository.StartRide(int rideID, int driverId, int otp);
         }
     }
 }

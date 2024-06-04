@@ -18,26 +18,28 @@ namespace Assessment_1.Controllers.UnAuthControllers {
         _riderService = riderService;
     }
 
-    [HttpPost]
+        [HttpPost]
         public ActionResult<int> AddRider(AddRiderVM riderVM)
         {
             int customerId = _riderService.AddRider(riderVM);
             return Ok(customerId);
         }
 
-        [Authorize]
-        [HttpGet("bookCab")]
-        public IActionResult GetAuthenticated()
-        {
-            return Ok("Hello World");
-        }
-
         [HttpPost("book-ride")]
         public ActionResult<int> BookRide([FromBody] RequestRideVM requestRide)
         {
             
+                //adding rider id as 1
                 int rideId = _riderService.BookRide(requestRide, 1);
                 return Ok(rideId);
+        }
+
+        //for testing authorisation
+        [Authorize]
+        [HttpGet("bookCab")]
+        public IActionResult GetAuthenticated()
+        {
+            return Ok("Authorised Booking");
         }
     }
 

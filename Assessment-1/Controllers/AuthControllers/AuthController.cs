@@ -19,8 +19,15 @@ namespace Assessment_1.Controllers.AuthControllers
             _authService = authService;
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] LoginRiderVM loginRequest)
+        [HttpPost("loginRider")]
+        public IActionResult LoginRider([FromBody] LoginRiderVM loginRequest)
+        {
+            var token = _authService.Authenticate(loginRequest);
+            return Ok(token);
+        }
+
+        [HttpPost("loginDriver")]
+        public IActionResult LoginDriver([FromBody] LoginRiderVM loginRequest)
         {
             var token = _authService.Authenticate(loginRequest);
             return Ok(token);
