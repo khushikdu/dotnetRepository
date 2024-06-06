@@ -6,12 +6,6 @@ namespace Assignment_2.ExtensionMethods
 {
     public static class JwtAuthenticationExtension
     {
-        /// <summary>
-        /// Adds JWT authentication to the service collection.
-        /// </summary>
-        /// <param name="services">The service collection.</param>
-        /// <param name="configuration">Configuration for JWT settings.</param>
-        /// <returns>The modified service collection.</returns>
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             string jwtIssuer = configuration["Jwt:Issuer"];

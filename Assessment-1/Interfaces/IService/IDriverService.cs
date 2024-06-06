@@ -1,13 +1,13 @@
-﻿using Assessment_1.Entity;
-using Assessment_1.ViewModel.RequestVM;
+﻿using Assessment_1.Models.Request;
+using Assessment_1.Models.Response;
 
 namespace Assessment_1.Interfaces.IService
 {
     public interface IDriverService
     {
-        int AddDriver(AddDriverVM driverVM);
-        List<Driver> GetAllAvailableDrivers();
-        List<Driver> GetDriversByVehicleType(string vehicleType);
-        void StartRide(int rideID, int driverId,int otp);
+        void ToggleAvailability(string driverEmail);
+        RideResponseDriver GetCurrentRide(string driverEmail);
+        StartRideResponse StartRide(StartRideRequest startRideRequest, string driverEmail);
+        void RateRider(RateRequest rateRiderRequest, string driverEmail);
     }
 }

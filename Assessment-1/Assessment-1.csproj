@@ -21,8 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Constants\" />
-    <Folder Include="Mapper\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
 </Project>
