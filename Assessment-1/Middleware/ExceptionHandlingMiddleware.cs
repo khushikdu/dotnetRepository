@@ -1,5 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System;
 using System.Net;
+using System.Security.Authentication;
+using System.Threading.Tasks;
 
 namespace Assessment_1.Middleware
 {
@@ -31,7 +36,7 @@ namespace Assessment_1.Middleware
             {
                 case InvalidOperationException:
                     status = HttpStatusCode.BadRequest;
-                    message = exception.Message;
+                    message = "Invalid Operation Exception";
                     break;
                 case UnauthorizedAccessException:
                     status = HttpStatusCode.Unauthorized;
@@ -43,7 +48,7 @@ namespace Assessment_1.Middleware
                     break;
             }
 
-            var response = new { message };
+            object response = new { message };
             string payload = JsonConvert.SerializeObject(response);
 
             context.Response.ContentType = "application/json";

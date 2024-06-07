@@ -29,8 +29,8 @@ namespace Assessment_1.Controllers
             {
                 return Unauthorized(new { Message = token });
             }
-            return Ok(token);
-            //return Ok(new { Token = token });
+
+            return Ok(new { Token = token });
         }
 
         /// <summary>

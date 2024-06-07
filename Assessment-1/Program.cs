@@ -16,7 +16,7 @@ namespace Assessment_1
 
             builder.Services.AddDbContext<TaxiService>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+                string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
 
