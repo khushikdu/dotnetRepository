@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Net;
-using System.Security.Authentication;
-using System.Threading.Tasks;
 
 namespace Assessment_1.Middleware
 {
@@ -34,18 +29,9 @@ namespace Assessment_1.Middleware
 
             switch (exception)
             {
-                //case InvalidCredentialsException:
-                //    status = HttpStatusCode.NotFound;
-                //    message = exception.Message;
-                //    break;
-                //case UniqueEmailException:
-                //    status = HttpStatusCode.NotFound;
-                //    message = exception.Message;
-                //    break;
-
                 case InvalidOperationException:
                     status = HttpStatusCode.BadRequest;
-                    message = "Invalid Operation Exception";
+                    message = exception.Message;
                     break;
                 case UnauthorizedAccessException:
                     status = HttpStatusCode.Unauthorized;
