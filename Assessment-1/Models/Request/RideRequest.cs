@@ -1,4 +1,5 @@
 ﻿using Assessment_1.Enums;
+using Assessment_1.Validations;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
@@ -13,6 +14,7 @@ namespace Assessment_1.Models.Request
         public string DropLocation { get; set; }
 
         [Required(ErrorMessage = "Type of ride is required")]
+        [VehicleTypeValidation]
         public string TypeOfRide { get; set; }
     }
 }

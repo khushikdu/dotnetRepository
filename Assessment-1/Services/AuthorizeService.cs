@@ -25,9 +25,14 @@ namespace Assessment_1.Services
 
         }
 
+        /// <summary>
+        /// Adds a new rider to the system.
+        /// </summary>
+        /// <param name="addUser">The request containing rider details.</param>
+        /// <returns>A message indicating whether the rider was created or if the rider already exists.</returns>
         public string AddRider(AddUser addUser)
         {
-            var existingUser = _context.Users
+            User? existingUser = _context.Users
                 .SingleOrDefault(u => (u.Email == addUser.Email || u.Phone == addUser.Phone) && u.UserType == UserType.Rider);
 
             if (existingUser != null)
@@ -35,15 +40,20 @@ namespace Assessment_1.Services
                 return ErrorMessages.RiderExists;
             }
 
-            var user = addUser.ToUser();
+            User user = addUser.ToUser();
             _context.Users.Add(user);
             _context.SaveChanges();
             return "Rider created successfully";
         }
 
+        /// <summary>
+        /// Adds a new driver to the system.
+        /// </summary>
+        /// <param name="addDriver">The request containing driver and vehicle details.</param>
+        /// <returns>A message indicating whether the driver was created or if the driver already exists.</returns>
         public string AddDriver(AddDriver addDriver)
         {
-            var existingDriver = _context.Users
+            User? existingDriver = _context.Users
                 .SingleOrDefault(u => (u.Email == addDriver.Email || u.Phone == addDriver.Phone) && u.UserType == UserType.Driver);
 
             if (existingDriver != null)
@@ -58,14 +68,20 @@ namespace Assessment_1.Services
             return "Driver created successfully";
         }
 
+        /// <summary>
+        /// Logs in a user and returns a JWT token.
+        /// </summary>
+        /// <param name="userLogin">The request containing login details.</param>
+        /// <returns>A JWT token if login is successful, or an error message if login fails.</returns>
         public string Login(UserLogin userLogin)
         {
-            var userType = userLogin.UserType.ToLower() switch
+            UserType userType = userLogin.UserType.ToLower() switch
             {
                 "rider" => UserType.Rider,
                 "driver" => UserType.Driver
             };
-            var user = _context.Users.FirstOrDefault(u => (u.Email == userLogin.EmailOrPhone || u.Phone == userLogin.EmailOrPhone) && u.Password == userLogin.Password &&u.UserType==userType);
+
+            User? user = _context.Users.FirstOrDefault(u => (u.Email == userLogin.EmailOrPhone || u.Phone == userLogin.EmailOrPhone) && u.Password == userLogin.Password &&u.UserType==userType);
 
             if (user == null)
             {

@@ -19,11 +19,16 @@ namespace Assessment_1.Controllers
             _rideService = rideService;
         }
 
+        /// <summary>
+        /// Cancels a ride.
+        /// </summary>
+        /// <param name="cancelRideRequest">The request containing the ride ID to be canceled.</param>
+        /// <returns>An IActionResult indicating the result of the cancel operation.</returns>
         [HttpPost("cancel-ride")]
         public IActionResult CancelRide([FromBody] CancelOrEndRideRequest cancelRideRequest)
         {
-            var userEmail = JwtUtils.GetEmailFromClaims(User);
-            var userRole = JwtUtils.GetRoleFromClaims(User);
+            string userEmail = JwtUtils.GetEmailFromClaims(User);
+            string userRole = JwtUtils.GetRoleFromClaims(User);
             UserType userType = userRole == "Rider" ? UserType.Rider : UserType.Driver;
 
             try
@@ -37,11 +42,16 @@ namespace Assessment_1.Controllers
             }
         }
 
+        /// <summary>
+        /// Ends a ride.
+        /// </summary>
+        /// <param name="endRideRequest">The request containing the ride ID to be ended.</param>
+        /// <returns>An IActionResult indicating the result of the end operation.</returns>
         [HttpPost("end-ride")]
         public IActionResult EndRide([FromBody] CancelOrEndRideRequest endRideRequest)
         {
-            var userEmail = JwtUtils.GetEmailFromClaims(User);
-            var userRole = JwtUtils.GetRoleFromClaims(User);
+            string userEmail = JwtUtils.GetEmailFromClaims(User);
+            string userRole = JwtUtils.GetRoleFromClaims(User);
             UserType userType = userRole == "Rider" ? UserType.Rider : UserType.Driver;
 
             try

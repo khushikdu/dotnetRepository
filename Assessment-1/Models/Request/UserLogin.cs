@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Assessment_1.Enums;
+using Assessment_1.Validations;
 
 namespace Assessment_1.Models.Request
 {
@@ -12,6 +13,7 @@ namespace Assessment_1.Models.Request
         public string Password { get; set; }
 
         [Required(ErrorMessage = "User type is required")]
+        [UserTypeValidation]
         public string UserType { get; set; }
     }
 }

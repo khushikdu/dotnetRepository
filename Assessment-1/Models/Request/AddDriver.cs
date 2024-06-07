@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Assessment_1.Enums;
+using Assessment_1.Validations;
 
 namespace Assessment_1.Models.Request
 {
@@ -23,6 +24,7 @@ namespace Assessment_1.Models.Request
         public UserType? UserType { get; set; }
 
         [Required(ErrorMessage = "Vehicle type is required")]
+        [VehicleTypeValidation]
         public string VehicleType { get; set; }
 
         [Required(ErrorMessage = "Vehicle number is required")]

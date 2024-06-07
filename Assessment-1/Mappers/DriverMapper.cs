@@ -8,7 +8,7 @@ namespace Assessment_1.Mappers
     {
         public static (User, VehicleAndAvailability) ToDriverAndVehicle(this AddDriver addDriver)
         {
-            var user = new User
+            User user = new User
             {
                 UserId = Guid.NewGuid(),
                 Name = addDriver.Name,
@@ -18,13 +18,14 @@ namespace Assessment_1.Mappers
                 UserType = UserType.Driver,
             };
 
-            var vehicleType = addDriver.VehicleType.ToLower() switch
+            VehicleType vehicleType = addDriver.VehicleType.ToLower() switch
             {
                 "bike" => VehicleType.Bike,
                 "car" => VehicleType.Car,
                 "auto" => VehicleType.Auto,
             };
-            var vehicle = new VehicleAndAvailability
+
+            VehicleAndAvailability vehicle = new VehicleAndAvailability
             {
                 Id = Guid.NewGuid(),
                 VehicleType = vehicleType,

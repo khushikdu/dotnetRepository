@@ -22,13 +22,18 @@ namespace Assessment_1.Controllers
             _riderService = riderService;
         }
 
+        /// <summary>
+        /// Requests a ride for the rider.
+        /// </summary>
+        /// <param name="rideRequest">The request containing ride details.</param>
+        /// <returns>An IActionResult containing the ride response or an error message.</returns>
         [HttpPost("request-ride")]
         public IActionResult RequestRide([FromBody] RideRequest rideRequest)        
         {
-            var riderEmail = JwtUtils.GetEmailFromClaims(User);
+            string riderEmail = JwtUtils.GetEmailFromClaims(User);
             try
             {
-                var response = _riderService.RequestRide(riderEmail, rideRequest);
+                RideResponseRider? response = _riderService.RequestRide(riderEmail, rideRequest);
                 return Ok(response);
             }
             catch (Exception ex) 
@@ -37,14 +42,18 @@ namespace Assessment_1.Controllers
             }        
         }
 
+        /// <summary>
+        /// Gets the details of the current ride for the rider.
+        /// </summary>
+        /// <returns>An IActionResult containing the current ride details or an error message.</returns>
         [HttpGet("current-ride")]
         public IActionResult GetCurrentRide()
         {
-            var riderEmail = JwtUtils.GetEmailFromClaims(User);
+            string riderEmail = JwtUtils.GetEmailFromClaims(User);
 
             try
             {
-                var response = _riderService.GetCurrentRide(riderEmail);
+                RideResponseRider? response = _riderService.GetCurrentRide(riderEmail);
                 return Ok(response);
             }
             catch (Exception ex) 
@@ -52,10 +61,16 @@ namespace Assessment_1.Controllers
                 return Ok(ex.Message.ToString());
             }
         }
+
+        /// <summary>
+        /// Rates the driver for a completed ride.
+        /// </summary>
+        /// <param name="rateDriverRequest">The request containing the ride ID and rating value.</param>
+        /// <returns>An IActionResult indicating the result of the rating operation.</returns>
         [HttpPost("rate-driver")]
         public IActionResult RateDriver([FromBody] RateRequest rateDriverRequest)
         {
-            var riderEmail = JwtUtils.GetEmailFromClaims(User);
+            string riderEmail = JwtUtils.GetEmailFromClaims(User);
 
             try
             {

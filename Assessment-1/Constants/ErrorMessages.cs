@@ -24,6 +24,5 @@
         public const string CannotToggleState = "Cannot toggle availability while having an ongoing or not started ride.";
         public const string NoVehicleAssigned = "No vehicle assigned to this driver.";
         public const string RideNotAllowed = "You are not allowed to request for another ride.";
-
     }
 }

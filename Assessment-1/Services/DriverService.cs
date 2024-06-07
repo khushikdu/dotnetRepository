@@ -7,6 +7,8 @@ using Assessment_1.Constants;
 using System;
 using System.Linq;
 using Assessment_1.Utilities;
+using Assessment_1.Exceptions;
+using Assessment_1.Entitites;
 
 namespace Assessment_1.Services
 {
@@ -19,49 +21,64 @@ namespace Assessment_1.Services
             _context = context;
         }
 
+        /// <summary>
+        /// Toggles the availability of a driver.
+        /// </summary>
+        /// <param name="driverEmail">The email of the driver.</param>
+        /// <exception cref="UserNotFoundException">Thrown when the driver is not found.</exception>
+        /// <exception cref="Exception">Thrown when no vehicle is assigned to the driver or the driver has an ongoing or not started ride.</exception>
+
         public void ToggleAvailability(string driverEmail)
         {
-            var driver = _context.Users.FirstOrDefault(u => u.Email == driverEmail && u.UserType == UserType.Driver);
+            User? driver = GetDriver(driverEmail);
             if (driver == null)
             {
-                throw new Exception(ErrorMessages.UserNotDriver);
+                throw new UserNotFoundException(ErrorMessages.UserNotDriver);
             }
 
-            var vehicleAvailability = _context.VehiclesAndAvailability.FirstOrDefault(v => v.UserId == driver.UserId);
+            VehicleAndAvailability? vehicleAvailability = _context.VehiclesAndAvailability.FirstOrDefault(v => v.UserId == driver.UserId);
             if (vehicleAvailability == null)
             {
                 throw new Exception(ErrorMessages.NoVehicleAssigned);
             }
 
+            //to check if the driver is in a pending/ongoing ride
             bool hasOngoingOrNotStartedRide = _context.Rides.Any(r => r.DriverId == driver.UserId &&(r.Status==RideStatus.Ongoing|| r.Status==RideStatus.NotStarted));
 
             if (hasOngoingOrNotStartedRide) 
             {
-                throw new Exception(ErrorMessages.CannotToggeState);
+                throw new OngoingOrPendingRideException(ErrorMessages.CannotToggeState);
             }
 
             vehicleAvailability.IsAvailable = !vehicleAvailability.IsAvailable;
             _context.SaveChanges();
         }
 
+        /// <summary>
+        /// Gets the current ride of a driver.
+        /// </summary>
+        /// <param name="driverEmail">The email of the driver.</param>
+        /// <returns>The current ride details.</returns>
+        /// <exception cref="UserNotFoundException">Thrown when the driver or rider is not found.</exception>
+        /// <exception cref="OngoingOrPendingRideException">Thrown when there is no ongoing ride available.</exception>
         public RideResponseDriver GetCurrentRide(string driverEmail)
         {
-            var driver = _context.Users.FirstOrDefault(u => u.Email == driverEmail && u.UserType == UserType.Driver);
+            User? driver =GetDriver(driverEmail);
             if (driver == null)
             {
-                throw new Exception(ErrorMessages.DriverNotFound);
+                throw new UserNotFoundException(ErrorMessages.DriverNotFound);
             }
 
-            var ongoingRide = _context.Rides.FirstOrDefault(r => r.DriverId == driver.UserId && r.Status == RideStatus.NotStarted);
+            Ride? ongoingRide = _context.Rides.FirstOrDefault(r => r.DriverId == driver.UserId && r.Status == RideStatus.NotStarted);
             if (ongoingRide == null)
             {
-                throw new Exception(ErrorMessages.NoOngoingRideAvailable);
+                throw new OngoingOrPendingRideException(ErrorMessages.NoOngoingRideAvailable);
             }
 
-            var rider = _context.Users.FirstOrDefault(u => u.UserId == ongoingRide.RiderId);
+            User? rider = _context.Users.FirstOrDefault(u => u.UserId == ongoingRide.RiderId);
             if (rider == null)
             {
-                throw new Exception(ErrorMessages.RiderNotFound);
+                throw new UserNotFoundException(ErrorMessages.RiderNotFound);
             }
 
             return new RideResponseDriver
@@ -72,24 +89,34 @@ namespace Assessment_1.Services
                 DropLocation = ongoingRide.DropLocation
             };
         }
+        /// <summary>
+        /// Starts a ride for a driver.
+        /// </summary>
+        /// <param name="startRideRequest">The request containing ride start details.</param>
+        /// <param name="driverEmail">The email of the driver.</param>
+        /// <returns>The response containing ride start details.</returns>
+        /// <exception cref="UserNotFoundException">Thrown when the driver is not found.</exception>
+        /// <exception cref="RideNotFoundException">Thrown when the ride is not found or does not belong to the driver.</exception>
+        /// <exception cref="InvalidOTPException">Thrown when the OTP is invalid.</exception>
+        /// <exception cref="Exception">Thrown when the ride is not in "NotStarted" status.</exception>
         public StartRideResponse StartRide(StartRideRequest startRideRequest, string driverEmail)
         {
-            var driver = _context.Users.FirstOrDefault(u => u.Email == driverEmail && u.UserType == UserType.Driver);
+            User? driver = GetDriver(driverEmail);
             if (driver == null)
             {
-                throw new Exception(ErrorMessages.UserNotDriver);
+                throw new UserNotFoundException(ErrorMessages.UserNotDriver);
             }
 
-            var ride = _context.Rides.FirstOrDefault(r => r.Id == startRideRequest.RideId);
+            Ride? ride = _context.Rides.FirstOrDefault(r => r.Id == startRideRequest.RideId);
             
             if (ride == null||ride.DriverId != driver.UserId)
             {
-                throw new Exception(ErrorMessages.RideNotFound);
+                throw new RideNotFoundException(ErrorMessages.RideNotFound);
             }
 
             if (ride.OTP != startRideRequest.OTP)
             {
-                throw new Exception(ErrorMessages.InvalidOTP);
+                throw new InvalidOTPException(ErrorMessages.InvalidOTP);
             }
 
             if (ride.Status != RideStatus.NotStarted)
@@ -107,19 +134,27 @@ namespace Assessment_1.Services
                 RideStatus = ride.Status.ToString()
             };
         }
+        /// <summary>
+        /// Rates a rider.
+        /// </summary>
+        /// <param name="rateRiderRequest">The request containing rating details.</param>
+        /// <param name="driverEmail">The email of the driver.</param>
+        /// <exception cref="RideNotFoundException">Thrown when the ride is not found or does not belong to the driver.</exception>
+        /// <exception cref="Exception">Thrown when the ride is not completed or the rating is invalid.</exception>
+        /// <exception cref="AlreadyRatedException">Thrown when the rider has already been rated.</exception>
         public void RateRider(RateRequest rateRiderRequest, string driverEmail)
         {
-            var ride = _context.Rides.FirstOrDefault(r => r.Id.ToString() == rateRiderRequest.RideId);
+            Ride? ride = _context.Rides.FirstOrDefault(r => r.Id.ToString() == rateRiderRequest.RideId);
 
             if (ride == null)
             {
-                throw new Exception(ErrorMessages.RideNotFound);
+                throw new RideNotFoundException(ErrorMessages.RideNotFound);
             }
 
-            var driver = _context.Users.FirstOrDefault(u => u.Email == driverEmail);
+            User? driver = _context.Users.FirstOrDefault(u => u.Email == driverEmail);
             if (ride.DriverId != driver.UserId)
             {
-                throw new Exception(ErrorMessages.RideNotFound);
+                throw new RideNotFoundException(ErrorMessages.RideNotFound);
             }
 
             if (ride.Status != RideStatus.Completed)
@@ -132,16 +167,26 @@ namespace Assessment_1.Services
                 throw new ArgumentException(ErrorMessages.InvalidRating);
             }
 
-            var existingRating = _context.Ratings.FirstOrDefault(r => r.RideId == ride.Id && r.RatedBy == UserType.Driver);
+            Ratings? existingRating = _context.Ratings.FirstOrDefault(r => r.RideId == ride.Id && r.RatedBy == UserType.Driver);
             if (existingRating != null)
             {
-                throw new Exception(ErrorMessages.AlreadyRatedRider);
+                throw new AlreadyRatedException(ErrorMessages.AlreadyRatedRider);
             }
 
-            var rating = RatingsMapper.MapToRatings(ride.Id, rateRiderRequest.Rating, UserType.Driver);
+            Ratings rating = RatingsMapper.MapToRatings(ride.Id, rateRiderRequest.Rating, UserType.Driver);
 
             _context.Ratings.Add(rating);
             _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Gets a driver by email.
+        /// </summary>
+        /// <param name="driverEmail">The email of the driver.</param>
+        /// <returns>The driver entity.</returns>
+        private User? GetDriver(string driverEmail)
+        {
+            return _context.Users.FirstOrDefault(u => u.Email == driverEmail && u.UserType == UserType.Driver);
         }
     }
 }
