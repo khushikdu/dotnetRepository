@@ -1,4 +1,5 @@
 using Assignment_5.Interface.IService;
+using Assignment_5.Middleware;
 using Assignment_5.Service;
 
 namespace Assignment_5
@@ -13,6 +14,7 @@ namespace Assignment_5
 
             builder.Services.AddControllers();
             builder.Services.AddSingleton<IKeyVaultService, KeyVaultService>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -30,6 +32,7 @@ namespace Assignment_5
 
             app.UseAuthorization();
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.MapControllers();
 

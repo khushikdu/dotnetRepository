@@ -16,13 +16,23 @@ namespace Assignment_5.Controllers
             _keyVaultService = keyVaultService;
         }
 
+        /// <summary>
+        /// Creates a new secret in the Key Vault.
+        /// </summary>
+        /// <param name="addSecret">The secret details to add.</param>
+        /// <returns>The result of the operation.</returns>
         [HttpPost("create")]
-        public async Task<IActionResult> CreateSecret([FromBody] SecretDto secretDto)
+        public async Task<IActionResult> CreateSecret([FromBody] AddSecret addSecret)
         {
-            var result = await _keyVaultService.CreateSecretAsync(secretDto.Name, secretDto.Value);
+            var result = await _keyVaultService.CreateSecretAsync(addSecret.Name, addSecret.Value);
             return Ok(result);
         }
 
+        /// <summary>
+        /// Retrieves the value of a secret from the Key Vault.
+        /// </summary>
+        /// <param name="name">The name of the secret to retrieve.</param>
+        /// <returns>The value of the secret.</returns>
         [HttpGet("retrieve/{name}")]
         public async Task<IActionResult> RetrieveSecret(string name)
         {
@@ -30,13 +40,23 @@ namespace Assignment_5.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Deletes a secret from the Key Vault.
+        /// </summary>
+        /// <param name="deleteSecret">The name of the secret to delete.</param>
+        /// <returns>The result of the operation.</returns>
         [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteSecret([FromBody] DeleteSecretDto deleteSecretDto)
+        public async Task<IActionResult> DeleteSecret([FromBody] DeleteSecret deleteSecret)
         {
-            var result = await _keyVaultService.DeleteSecretAsync(deleteSecretDto.Name, deleteSecretDto.WaitDurationSeconds);
+            var result = await _keyVaultService.DeleteSecretAsync(deleteSecret.Name);
             return Ok(result);
         }
 
+        /// <summary>
+        /// Purges a deleted secret from the Key Vault.
+        /// </summary>
+        /// <param name="name">The name of the secret to purge.</param>
+        /// <returns>The result of the operation.</returns>
         [HttpDelete("purge/{name}")]
         public async Task<IActionResult> PurgeSecret(string name)
         {
