@@ -13,7 +13,7 @@ namespace Assignment_5
             // Add services to the container.
 
             builder.Services.AddControllers();
-            builder.Services.AddSingleton<IKeyVaultService, KeyVaultService>();
+            builder.Services.AddScoped<IKeyVaultService, KeyVaultService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

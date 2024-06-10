@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using Assignment_5.Interface.IService;
 using Assignment_5.Model;
+using Assignment_5.Constants;
 
 namespace Assignment_5.Controllers
 {
-    [Route("api/[controller]")]
+    [Route(RoutePaths.BasePath)]
     [ApiController]
     public class KeyVaultController : ControllerBase
     {
@@ -21,7 +22,7 @@ namespace Assignment_5.Controllers
         /// </summary>
         /// <param name="addSecret">The secret details to add.</param>
         /// <returns>The result of the operation.</returns>
-        [HttpPost("create")]
+        [HttpPost(RoutePaths.CreateSecret)]
         public async Task<IActionResult> CreateSecret([FromBody] AddSecret addSecret)
         {
             string result = await _keyVaultService.CreateSecretAsync(addSecret.Name, addSecret.Value);
@@ -33,7 +34,7 @@ namespace Assignment_5.Controllers
         /// </summary>
         /// <param name="name">The name of the secret to retrieve.</param>
         /// <returns>The value of the secret.</returns>
-        [HttpGet("retrieve/{name}")]
+        [HttpGet(RoutePaths.RetrieveSecret)]
         public async Task<IActionResult> RetrieveSecret(string name)
         {
             string result = await _keyVaultService.RetrieveSecretAsync(name);
@@ -45,7 +46,7 @@ namespace Assignment_5.Controllers
         /// </summary>
         /// <param name="deleteSecret">The name of the secret to delete.</param>
         /// <returns>The result of the operation.</returns>
-        [HttpDelete("delete")]
+        [HttpDelete(RoutePaths.DeleteSecret)]
         public async Task<IActionResult> DeleteSecret([FromBody] DeleteSecret deleteSecret)
         {
             string result = await _keyVaultService.DeleteSecretAsync(deleteSecret.Name);
@@ -57,7 +58,7 @@ namespace Assignment_5.Controllers
         /// </summary>
         /// <param name="name">The name of the secret to purge.</param>
         /// <returns>The result of the operation.</returns>
-        [HttpDelete("purge/{name}")]
+        [HttpDelete(RoutePaths.PurgeSecret)]
         public async Task<IActionResult> PurgeSecret(string name)
         {
             string result = await _keyVaultService.PurgeSecretAsync(name);
