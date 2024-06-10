@@ -7,11 +7,11 @@ namespace Assignment_5.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SecretsController : ControllerBase
+    public class KeyVaultController : ControllerBase
     {
         private readonly IKeyVaultService _keyVaultService;
 
-        public SecretsController(IKeyVaultService keyVaultService)
+        public KeyVaultController(IKeyVaultService keyVaultService)
         {
             _keyVaultService = keyVaultService;
         }
@@ -24,7 +24,7 @@ namespace Assignment_5.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateSecret([FromBody] AddSecret addSecret)
         {
-            var result = await _keyVaultService.CreateSecretAsync(addSecret.Name, addSecret.Value);
+            string result = await _keyVaultService.CreateSecretAsync(addSecret.Name, addSecret.Value);
             return Ok(result);
         }
 
@@ -36,7 +36,7 @@ namespace Assignment_5.Controllers
         [HttpGet("retrieve/{name}")]
         public async Task<IActionResult> RetrieveSecret(string name)
         {
-            var result = await _keyVaultService.RetrieveSecretAsync(name);
+            string result = await _keyVaultService.RetrieveSecretAsync(name);
             return Ok(result);
         }
 
@@ -48,7 +48,7 @@ namespace Assignment_5.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteSecret([FromBody] DeleteSecret deleteSecret)
         {
-            var result = await _keyVaultService.DeleteSecretAsync(deleteSecret.Name);
+            string result = await _keyVaultService.DeleteSecretAsync(deleteSecret.Name);
             return Ok(result);
         }
 
@@ -60,7 +60,7 @@ namespace Assignment_5.Controllers
         [HttpDelete("purge/{name}")]
         public async Task<IActionResult> PurgeSecret(string name)
         {
-            var result = await _keyVaultService.PurgeSecretAsync(name);
+            string result = await _keyVaultService.PurgeSecretAsync(name);
             return Ok(result);
         }
     }

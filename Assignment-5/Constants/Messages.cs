@@ -7,6 +7,8 @@
         public static readonly string RetrieveSecretError = "Error retrieving secret: {0}";
         public static readonly string DeleteSecretError = "Error deleting secret: {0}";
         public static readonly string PurgeSecretError = "Error purging secret: {0}";
+        public static readonly string SoftDeleteNotEnabled = "Error purging secret. Soft delete not enables";
+        public static readonly string EnvVariableNotSet = "KEY_VAULT_NAME environment variable is not set.";
 
         // Success Messages
         public static readonly string CreateSecretSuccess = "Secret '{0}' created successfully.";

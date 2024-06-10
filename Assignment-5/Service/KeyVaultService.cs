@@ -7,16 +7,29 @@ using System.Threading.Tasks;
 
 namespace Assignment_5.Service
 {
+    /// <summary>
+    /// Service for interacting with Azure Key Vault.
+    /// </summary>
     public class KeyVaultService : IKeyVaultService
     {
         private readonly SecretClient _secretClient;
+        private readonly bool _softDeleteEnabled;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyVaultService"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         public KeyVaultService(IConfiguration configuration)
         {
-            var vaultName = configuration["AzureKeyVault:VaultName"];
-            var kvUri = $"https://{vaultName}.vault.azure.net/";
+            string? vaultName = Environment.GetEnvironmentVariable(KeyVaultConstants.KeyVaultName);
+            if (string.IsNullOrEmpty(vaultName))
+            {
+                throw new ArgumentNullException(Messages.EnvVariableNotSet);
+            }
+            string kvUri = $"https://{vaultName}.vault.azure.net/";
 
             _secretClient = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
+            _softDeleteEnabled = bool.Parse(configuration[KeyVaultConstants.SoftDeleteEnabled] ?? "true");
         }
 
         /// <summary>
@@ -29,8 +42,8 @@ namespace Assignment_5.Service
         {
             try
             {
-                var response = await _secretClient.SetSecretAsync(name, value);
-                return string.Format(Messages.CreateSecretSuccess, response.Value.Name);
+                KeyVaultSecret response = await _secretClient.SetSecretAsync(name, value);
+                return string.Format(Messages.CreateSecretSuccess, response.Name);
             }
             catch (Exception ex)
             {
@@ -47,8 +60,8 @@ namespace Assignment_5.Service
         {
             try
             {
-                var response = await _secretClient.GetSecretAsync(name);
-                return response.Value.Value;
+                KeyVaultSecret response = await _secretClient.GetSecretAsync(name);
+                return response.Value;
             }
             catch (Exception ex)
             {
@@ -66,7 +79,7 @@ namespace Assignment_5.Service
         {
             try
             {
-                var response = await _secretClient.StartDeleteSecretAsync(name);
+                DeleteSecretOperation response = await _secretClient.StartDeleteSecretAsync(name);
                 if (waitDurationSeconds.HasValue)
                 {
                     await Task.Delay(waitDurationSeconds.Value * 1000);
@@ -89,6 +102,10 @@ namespace Assignment_5.Service
         {
             try
             {
+                if (!_softDeleteEnabled)
+                {
+                    return Messages.SoftDeleteNotEnabled;
+                }
                 await _secretClient.PurgeDeletedSecretAsync(name);
                 return string.Format(Messages.PurgeSecretSuccess, name);
             }
