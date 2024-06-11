@@ -15,6 +15,11 @@ namespace EventHubs.Controllers
             _eventProducerService = eventProducerService;
         }
 
+        /// <summary>
+        /// Produces an event to the Event Hub.
+        /// </summary>
+        /// <param name="eventData">The event data to produce.</param>
+        /// <returns>An <see cref="IActionResult"/> indicating the result of the operation.</returns>
         [HttpPost(RoutePath.Produce)]
         public async Task<IActionResult> ProduceEvent([FromBody] string eventData)
         {

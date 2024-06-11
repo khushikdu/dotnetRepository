@@ -12,18 +12,23 @@ namespace EvenHubProcessor.Service
     {
         private readonly EventProcessorClient _processorClient;
         private readonly BlobContainerClient _storageClient;
+        private readonly ILogger<EventProcessorService> _logger;
 
-        public EventProcessorService(IConfiguration configuration)
+
+        public EventProcessorService(IConfiguration configuration, ILogger<EventProcessorService> logger)
         {
+            _logger = logger;
             string connectionString = configuration["EventHub:ConnectionString"];
             string eventHubName = configuration["EventHub:EventHubName"];
             string consumerGroup = EventHubConsumerClient.DefaultConsumerGroupName;
             string blobStorageConnectionString = configuration["BlobStorage:ConnectionString"];
             string blobContainerName = configuration["BlobStorage:ContainerName"];
-            Console.WriteLine("cw" + connectionString);
+
+            // Initialize BlobContainerClient and EventProcessorClient
             _storageClient = new BlobContainerClient(blobStorageConnectionString, blobContainerName);
             _processorClient = new EventProcessorClient(_storageClient, consumerGroup, connectionString, eventHubName);
 
+            // Register event handlers
             _processorClient.ProcessEventAsync += ProcessEventHandler;
             _processorClient.ProcessErrorAsync += ProcessErrorHandler;
         }
@@ -38,20 +43,29 @@ namespace EvenHubProcessor.Service
             await _processorClient.StopProcessingAsync();
         }
 
+        /// <summary>
+        /// Handles incoming events from the Event Hub.
+        /// </summary>
+        /// <param name="eventArgs">The event arguments.</param>
         private async Task ProcessEventHandler(ProcessEventArgs eventArgs)
         {
 
             string eventData = Encoding.UTF8.GetString(eventArgs.Data.Body.ToArray());
-            Console.WriteLine($"Received event: {eventData}");
+            _logger.LogInformation($"Received event: {eventData}");
 
             // Update checkpoint in the blob storage
             await eventArgs.UpdateCheckpointAsync(eventArgs.CancellationToken);
         }
 
+        /// <summary>
+        /// Handles errors that occur during event processing.
+        /// </summary>
+        /// <param name="eventArgs">The error event arguments.</param>
         private Task ProcessErrorHandler(ProcessErrorEventArgs eventArgs)
         {
-            Console.WriteLine($"Error processing event: {eventArgs.Exception.Message}");
+            _logger.LogInformation($"Error processing event: {eventArgs.Exception.Message}");
             return Task.CompletedTask;
         }
+        
     }
 }

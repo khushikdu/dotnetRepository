@@ -33,7 +33,7 @@ namespace EventHubs.Middleware
                     status = HttpStatusCode.BadRequest;
                     message = "Invalid Operation Exception";
                     break;
-                case UnauthorizedAccessException:
+                case ArgumentException:
                     status = HttpStatusCode.Unauthorized;
                     message = exception.Message;
                     break;

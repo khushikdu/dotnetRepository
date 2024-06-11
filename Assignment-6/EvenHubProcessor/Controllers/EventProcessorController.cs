@@ -15,6 +15,10 @@ namespace EvenHubProcessor.Controllers
             _eventProcessorService = eventProcessorService;
         }
 
+        /// <summary>
+        /// Starts the event processing.
+        /// </summary>
+        /// <returns>An <see cref="IActionResult"/> indicating the result of the operation.</returns>
         [HttpPost(RoutePaths.Start)]
         public async Task<IActionResult> StartProcessing()
         {
@@ -29,6 +33,10 @@ namespace EvenHubProcessor.Controllers
             }
         }
 
+        /// <summary>
+        /// Stops the event processing.
+        /// </summary>
+        /// <returns>An <see cref="IActionResult"/> indicating the result of the operation.</returns>
         [HttpPost(RoutePaths.Stop)]
         public async Task<IActionResult> StopProcessing()
         {
