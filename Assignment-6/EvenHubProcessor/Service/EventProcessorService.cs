@@ -20,7 +20,7 @@ namespace EvenHubProcessor.Service
             string consumerGroup = EventHubConsumerClient.DefaultConsumerGroupName;
             string blobStorageConnectionString = configuration["BlobStorage:ConnectionString"];
             string blobContainerName = configuration["BlobStorage:ContainerName"];
-
+            Console.WriteLine("cw" + connectionString);
             _storageClient = new BlobContainerClient(blobStorageConnectionString, blobContainerName);
             _processorClient = new EventProcessorClient(_storageClient, consumerGroup, connectionString, eventHubName);
 
