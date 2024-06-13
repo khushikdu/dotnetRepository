@@ -22,7 +22,7 @@ namespace Assignment_7.Service
 
         public BlobService(IConfiguration configuration)
         {
-            _blobServiceClient = new BlobServiceClient(configuration["ConnectionString"]);
+            _blobServiceClient = new BlobServiceClient(configuration["BlobConnectionString"]);
             _directoryPath = configuration["DirectoryPath"];
             _fileName = configuration["FileName"];
         }
