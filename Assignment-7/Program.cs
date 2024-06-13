@@ -1,9 +1,7 @@
-﻿using Assignment_7.ExtensionMethod;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
+﻿using Assignment_7.Constants;
+using Assignment_7.ExtensionMethod;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
 
 namespace Assignment_7
 {
@@ -11,18 +9,20 @@ namespace Assignment_7
     {
         static async Task Main(string[] args)
         {
-            var serviceProvider = ExtensionMethod.ServiceProvider.ConfigureServices();
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            try
+            {
+                IServiceProvider serviceProvider = ExtensionMethod.ServiceProvider.ConfigureServices();
+                IConfiguration configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            var keyVaultUrl = configuration["AzureKeyVault:VaultUri"];
-            var secretClient = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
+                string? blobConnectionString = KeyVaultConfiguration.ConfigureKeyVault(serviceProvider, configuration);
 
-            KeyVaultSecret secret = await secretClient.GetSecretAsync("BlobConnectionString");
-            var blobConnectionString = secret.Value;
-            configuration["BlobConnectionString"]= blobConnectionString;
-
-            Console.WriteLine($"Retrieved Blob Connection String: {blobConnectionString}");
-            await BlobOperations.RunAsync(serviceProvider);
+                configuration[AppConstants.ConnectionString] = blobConnectionString;
+                await BlobOperations.PerformBlobOperationsAsync(serviceProvider);
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(Messages.TryLater);
+            }
         }
     }
 }

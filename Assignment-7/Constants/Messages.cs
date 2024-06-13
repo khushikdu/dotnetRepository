@@ -20,10 +20,13 @@ namespace Assignment_7.Constants
         public const string DownloadedBlob = "Downloaded blob to '{0}'";
         public const string ErrorDownloadingBlob = "Error downloading blob: {0}";
         public const string ErrorSettingAccessPolicy = "Error setting access policy for container '{0}': {1}";
-        public const string CleanedUpFiles = "Cleaned up local files.";
+        public const string CleanedUpFiles = "Cleaned up containers, blobs and local files.";
         public const string ErrorCleaningUpFiles = "Error cleaning up files: {0}";
         public const string ContainerNameNotFound = "Container not found \nCreate a blob container first.";
         public const string InvalidChoice = "Invalid choice. Please try again.";
         public const string InvalidInput = "Invalid input. Please enter a number.";
+        public const string SecretNotFound = "Error fetching Connection string";
+        public const string TryLater = "Try again later";
+        public const string SampleText = "This is a sample text file for Azure Blob Storage operations.";
     }
 }

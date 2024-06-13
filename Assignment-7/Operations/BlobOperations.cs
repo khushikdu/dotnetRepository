@@ -3,18 +3,16 @@ using Assignment_7.Interface.IService;
 using Assignment_7.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
 
 namespace Assignment_7
 {
     public static class BlobOperations
     {
-        public static async Task RunAsync(IServiceProvider serviceProvider)
+        public static async Task PerformBlobOperationsAsync(IServiceProvider serviceProvider)
         {
-            var blobService = serviceProvider.GetService<IBlobService>();
-            var menu = serviceProvider.GetService<Menu>();
-            var configuration = serviceProvider.GetService<IConfiguration>();
+            IBlobService blobService = serviceProvider.GetService<IBlobService>();
+            Menu menu = serviceProvider.GetService<Menu>();
+            IConfiguration configuration = serviceProvider.GetService<IConfiguration>();
 
             bool exit = false;
 
@@ -34,17 +32,17 @@ namespace Assignment_7
                                 await blobService.SetContainerAccessPolicyAsync();
                                 break;
                             case 3:
-                                string filePath = blobService.GenerateSampleFile(configuration["DirectoryPath"], configuration["FileName"]);
+                                string filePath = blobService.GenerateSampleFile(AppConstants.DirectoryPath, AppConstants.FileName);
                                 await blobService.UploadBlobAsync(filePath);
                                 break;
                             case 4:
                                 await blobService.ListBlobsAsync();
                                 break;
                             case 5:
-                                await blobService.DownloadBlobAsync(configuration["FileName"]);
+                                await blobService.DownloadBlobAsync(AppConstants.FileName);
                                 break;
                             case 6:
-                                blobService.CleanUp(configuration["FileName"]);
+                                blobService.CleanUp(AppConstants.FileName);
                                 break;
                             case 7:
                                 exit = true;

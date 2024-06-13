@@ -3,11 +3,7 @@ using Assignment_7.Interface.IService;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure.Storage.Sas;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Assignment_7.Service
 {
@@ -22,9 +18,9 @@ namespace Assignment_7.Service
 
         public BlobService(IConfiguration configuration)
         {
-            _blobServiceClient = new BlobServiceClient(configuration["BlobConnectionString"]);
-            _directoryPath = configuration["DirectoryPath"];
-            _fileName = configuration["FileName"];
+            _blobServiceClient = new BlobServiceClient(configuration[AppConstants.ConnectionString]);
+            _directoryPath = AppConstants.DirectoryPath;
+            _fileName = AppConstants.FileName;
         }
 
         public async Task CreateContainerAsync()
@@ -48,7 +44,7 @@ namespace Assignment_7.Service
             {
                 Directory.CreateDirectory(directoryPath);
                 string filePath = Path.Combine(directoryPath, fileName);
-                File.WriteAllText(filePath, "This is a sample text file for Azure Blob Storage operations.");
+                File.WriteAllText(filePath, Messages.SampleText);
                 Console.WriteLine(string.Format(Messages.GeneratedSampleFile, filePath));
                 return filePath;
             }
@@ -98,7 +94,7 @@ namespace Assignment_7.Service
             {
                 if (!ContainerExistsAsync()) return;
                 BlobClient blobClient = _containerClient.GetBlobClient(Path.GetFileName(originalFilePath));
-                string downloadFilePath = Path.Combine(_directoryPath, "downloaded-" + Path.GetFileName(originalFilePath));
+                string downloadFilePath = Path.Combine(_directoryPath, AppConstants.DownloadPrefix + Path.GetFileName(originalFilePath));
                 await blobClient.DownloadToAsync(downloadFilePath);
                 Console.WriteLine(string.Format(Messages.DownloadedBlob, downloadFilePath));
             }
@@ -128,7 +124,7 @@ namespace Assignment_7.Service
                 if (!ContainerExistsAsync()) return;
                 _containerClient.DeleteAsync();
                 File.Delete(Path.Combine(_directoryPath, Path.GetFileName(filePath)));
-                File.Delete(Path.Combine(_directoryPath, "downloaded-" + Path.GetFileName(filePath)));
+                File.Delete(Path.Combine(_directoryPath, AppConstants.DownloadPrefix + Path.GetFileName(filePath)));
                 Console.WriteLine(Messages.CleanedUpFiles);
             }
             catch (RequestFailedException ex)

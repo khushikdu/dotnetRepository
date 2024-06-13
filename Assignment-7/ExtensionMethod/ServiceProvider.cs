@@ -11,12 +11,12 @@ namespace Assignment_7.ExtensionMethod
     {
         public static IServiceProvider ConfigureServices()
         {
-            var configuration = new ConfigurationBuilder()
+            IConfiguration configuration = new ConfigurationBuilder()
                .SetBasePath(Directory.GetCurrentDirectory())
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                .Build();
 
-            var services = new ServiceCollection()
+            IServiceCollection services = new ServiceCollection()
                 .AddSingleton<IConfiguration>(configuration)
                 .AddSingleton<IBlobService, BlobService>()
                 .AddSingleton<Menu>();
